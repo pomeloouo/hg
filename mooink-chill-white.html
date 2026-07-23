@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6 吋 mooInk Chill 彩色電子書閱讀器（迷月白）- Readmoo 讀墨電子書</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --cyan: #00c8c8;
+      --dark: #1a1a1a;
+      --gray-bg: #f2f2f2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      overflow-x: hidden;
+      color: #212529;
+      padding-bottom: 0;
+    }
+
+    /* ── NAVBAR ── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #fff;
+      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo img.main-logo { height: 30px; }
+    .nav-logo img.series-logo { height: 18px; }
+    .nav-right { display: flex; align-items: center; gap: 18px; }
+    .nav-right a {
+      text-decoration: none;
+      color: #333;
+      font-size: 13px;
+    }
+    .btn-campaign {
+      background: #43c05a;
+      color: #fff !important;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ── BUY SECTION ── */
+    .buy-section { padding: 32px 0 24px; background: #fff; }
+    .product-img-col { display: flex; justify-content: center; align-items: center; }
+    .product-img-col img { max-height: 320px; object-fit: contain; }
+    .price-box { padding: 8px 0; }
+    .product-title { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+    .price-sale { font-size: 28px; font-weight: 800; }
+    .price-orig { font-size: 14px; color: #999; text-decoration: line-through; margin-left: 8px; }
+    .color-label { font-size: 13px; color: #666; margin-bottom: 6px; }
+    .color-swatches { display: flex; gap: 8px; margin-bottom: 16px; }
+    .color-swatches a {
+      padding: 5px 16px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 13px;
+      text-decoration: none;
+      color: #333;
+    }
+    .color-swatches a.active { border-color: #111; font-weight: 600; }
+
+    /* ── HERO SECTION ── */
+    .hero-section {
+      background: #2c2c2c;
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-title {
+      color: #fff;
+      font-size: clamp(1.6rem, 4vw, 3rem);
+      font-weight: 900;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      letter-spacing: 0.02em;
+    }
+    .hero-devices {
+      position: relative;
+      width: 100%;
+      max-width: 860px;
+      height: 520px;
+      margin-top: 20px;
+    }
+    .hero-dev-white {
+      position: absolute;
+      left: 3%;
+      bottom: 0;
+      height: 88%;
+      object-fit: contain;
+      z-index: 2;
+      transform: translateX(-140%);
+      animation: slideInL 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+    }
+    .hero-dev-black {
+      position: absolute;
+      right: 3%;
+      bottom: 0;
+      height: 80%;
+      object-fit: contain;
+      z-index: 1;
+      transform: translateX(140%);
+      animation: slideInR 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+    }
+    @keyframes slideInL {
+      to { transform: translateX(0) rotate(-3deg); }
+    }
+    @keyframes slideInR {
+      to { transform: translateX(0) rotate(3deg); }
+    }
+    .hero-dev-white.arrived {
+      animation: floatL 5s ease-in-out infinite;
+    }
+    .hero-dev-black.arrived {
+      animation: floatR 5s ease-in-out 0.6s infinite;
+    }
+    @keyframes floatL {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-18px) rotate(-3deg); }
+    }
+    @keyframes floatR {
+      0%, 100% { transform: translateY(-10px) rotate(3deg); }
+      50% { transform: translateY(10px) rotate(3deg); }
+    }
+
+    /* ── TEAM TAIWAN SECTION ── */
+    .team-section {
+      padding: 80px 20px 60px;
+      background: #fff;
+      text-align: center;
+    }
+    .team-section h2 { font-size: clamp(1.5rem, 3.5vw, 2.6rem); font-weight: 800; }
+    .team-sub { color: var(--cyan); font-size: 15px; margin-top: 8px; letter-spacing: 0.03em; }
+    .team-chill-img {
+      max-width: 280px;
+      margin: 28px auto;
+      display: block;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .team-feature-img {
+      width: 100%;
+      max-width: 960px;
+      border-radius: 16px;
+      display: block;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .team-feature-img img { width: 100%; display: block; }
+
+    /* ── WEIGHT SECTION ── */
+    .weight-section {
+      padding: 80px 0;
+      background: var(--gray-bg);
+    }
+    .weight-section h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 800; }
+    .weight-section p { color: #555; font-size: 15px; margin-top: 10px; }
+    .stats-wrap { display: flex; gap: 36px; margin: 28px 0; flex-wrap: wrap; }
+    .stat-block { }
+    .stat-num { font-size: 2.6rem; font-weight: 900; line-height: 1; }
+    .stat-txt { font-size: 12px; color: #777; margin-top: 4px; }
+    .weight-img { width: 100%; border-radius: 14px; display: block; }
+
+    /* ── GENERIC FEATURE SECTION ── */
+    .feat-section {
+      padding: 80px 0;
+    }
+    .feat-section.dark-bg { background: #1d1d1d; color: #fff; }
+    .feat-section.dark-bg h2 { color: #fff; }
+    .feat-section.dark-bg p { color: #aaa; }
+    .feat-section h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 800; }
+    .feat-section p { color: #555; font-size: 15px; margin-top: 10px; }
+    .feat-img { width: 100%; border-radius: 14px; display: block; }
+
+    /* ── CAROUSEL SECTION ── */
+    .carousel-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .carousel-track-inner {
+      display: flex;
+      transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .carousel-track-inner img {
+      min-width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .c-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.82);
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+    }
+    .c-btn:hover { background: rgba(255,255,255,1); }
+    .c-btn.prev { left: 12px; }
+    .c-btn.next { right: 12px; }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .c-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .c-dot.active { background: #333; }
+
+    /* ── LIGHT SECTION ── */
+    .light-section {
+      padding: 80px 20px;
+      background: #111;
+      text-align: center;
+    }
+    .light-section h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 800; color: #fff; }
+    .light-section p { color: #888; font-size: 15px; margin-top: 10px; }
+    .light-wrap {
+      position: relative;
+      max-width: 720px;
+      margin: 36px auto 0;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .light-img-base, .light-img-over {
+      display: block;
+      width: 100%;
+    }
+    .light-img-over {
+      position: absolute;
+      inset: 0;
+      transition: opacity 1.2s ease;
+      opacity: 0;
+    }
+    .light-wrap.night .light-img-over { opacity: 1; }
+    .light-toggle-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .l-btn {
+      padding: 8px 28px;
+      border: 2px solid #555;
+      background: transparent;
+      color: #aaa;
+      border-radius: 24px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .l-btn.active {
+      border-color: #fff;
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* ── STYLE SECTION ── */
+    .style-section {
+      padding: 80px 20px;
+      background: #f8f8f8;
+      text-align: center;
+    }
+    .style-section h2 { font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 800; }
+    .style-section p { color: #555; font-size: 15px; margin-top: 8px; }
+    .style-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 860px;
+      margin: 32px auto 0;
+    }
+    .style-grid img { width: 100%; border-radius: 14px; display: block; }
+
+    /* ── SPEC BUTTON ── */
+    .spec-section {
+      padding: 48px 20px;
+      text-align: center;
+      background: #fff;
+    }
+    .btn-spec {
+      background: #212529;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 40px;
+      padding: 14px 52px;
+      font-size: 16px;
+      font-weight: 600;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .btn-spec:hover { background: #000; color: #fff; }
+
+    /* ── FAQ ── */
+    .faq-outer {
+      background: var(--gray-bg);
+      padding: 60px 20px 80px;
+    }
+    .faq-inner { max-width: 860px; margin: 0 auto; }
+    .faq-inner > h2 { font-size: 2rem; font-weight: 800; margin-bottom: 4px; }
+    .faq-cat-title { font-size: 15px; font-weight: 700; color: #555; margin: 32px 0 16px; }
+    .faq-item { border-top: 1px solid #ddd; }
+    .faq-item:last-child { border-bottom: 1px solid #ddd; }
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 4px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      gap: 12px;
+      user-select: none;
+    }
+    .faq-arrow {
+      flex-shrink: 0;
+      transition: transform 0.3s;
+      font-size: 12px;
+      color: #888;
+    }
+    .faq-a {
+      display: none;
+      padding: 0 4px 16px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.75;
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── ACCESSORIES ── */
+    .acc-section {
+      padding: 60px 20px 80px;
+      background: #fff;
+    }
+    .acc-section h2 { text-align: center; font-size: clamp(1.2rem, 2.5vw, 1.8rem); font-weight: 800; margin-bottom: 32px; }
+    .acc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .acc-card {
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--gray-bg);
+      text-decoration: none;
+      color: #212529;
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: block;
+    }
+    .acc-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+    .acc-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+    .acc-card-body { padding: 12px 14px 14px; }
+    .acc-name { font-size: 14px; font-weight: 600; }
+    .acc-cta { font-size: 12px; color: var(--cyan); margin-top: 4px; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: #1a1a1a;
+      color: #777;
+      text-align: center;
+      padding: 32px 20px;
+    }
+    .site-footer img { height: 44px; margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto; }
+    .site-footer p { font-size: 12px; }
+
+
+    /* ── SCROLL FADE ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 767px) {
+      .hero-devices { height: 360px; }
+      .hero-dev-white { height: 78%; }
+      .hero-dev-black { height: 70%; }
+      .style-grid { grid-template-columns: 1fr; }
+      .nav-right .hide-mobile { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="site-nav">
+  <div class="nav-logo">
+    <img class="main-logo" src="https://cdn.readmoo.com/images/store/svg-logos/logo_short.svg" alt="讀墨">
+    <img class="series-logo" src="https://cdn.readmoo.com/images/store/svg-logos/series_logo.svg" alt="mooInk SERIES">
+  </div>
+  <div class="nav-right">
+    <a href="#" class="btn-campaign">優惠套組</a>
+    <a href="#" class="hide-mobile">配件周邊</a>
+    <a href="#" class="hide-mobile">規格比較</a>
+    <a href="#" class="hide-mobile">展售店家</a>
+    <a href="#" class="hide-mobile">版本更新</a>
+    <a href="#" class="hide-mobile">支援</a>
+  </div>
+</nav>
+
+<!-- ══ BUY SECTION ══ -->
+<section class="buy-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-5 product-img-col mb-4 mb-md-0">
+        <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/main/white.webp?v=20260701"
+             alt="mooInk Chill 迷月白" class="img-fluid">
+      </div>
+      <div class="col-md-7">
+        <h1 class="product-title">6 吋 mooInk Chill 彩色電子書閱讀器 - 迷月白</h1>
+        <div class="mb-3">
+          <span class="price-sale">NT$ 8,279</span>
+          <span class="price-orig">NT$ 8,999</span>
+        </div>
+        <div class="color-label">顏色：</div>
+        <div class="color-swatches">
+          <a href="#" class="active">迷月白</a>
+          <a href="#">暗夜黑</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HERO SECTION ══ -->
+<section class="hero-section">
+  <h2 class="hero-title">Let's Get Chill，一起 CHILL！</h2>
+  <div class="hero-devices">
+    <img id="heroWhite"
+         class="hero-dev-white"
+         src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/chill_white.webp?v=20260701"
+         alt="mooInk Chill 迷月白">
+    <img id="heroBlack"
+         class="hero-dev-black"
+         src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/chill.webp?v=20260701"
+         alt="mooInk Chill 暗夜黑">
+  </div>
+</section>
+
+<!-- ══ TEAM TAIWAN SECTION ══ -->
+<section class="team-section">
+  <div class="fade-up">
+    <h2>攜手出擊，Team Taiwan 神隊友</h2>
+    <p class="team-sub">E Ink 彩色面板 × 聯發科極速晶片 × 讀墨繁中軟體</p>
+  </div>
+  <div class="team-feature-img mt-5 fade-up">
+    <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img1.webp?v=20260701"
+         alt="mooInk Chill 產品特色">
+  </div>
+</section>
+
+<!-- ══ WEIGHT SECTION ══ -->
+<section class="weight-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-5 fade-up">
+        <h2>信手隨行，輕巧超 Chill！</h2>
+        <p>6 吋窄邊框、170 克輕盈。</p>
+        <div class="stats-wrap mt-4">
+          <div class="stat-block">
+            <div class="stat-num">170g</div>
+            <div class="stat-txt">重量</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-num" style="font-size:1.9rem;">159 × 80 × 8.4</div>
+            <div class="stat-txt">尺寸 (mm)</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7 fade-up">
+        <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img2_white.webp?v=20260701"
+             alt="mooInk Chill 輕巧" class="weight-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HAND / CAROUSEL SECTION ══ -->
+<section class="feat-section" style="background:#fff; padding:80px 0;">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-6 fade-up order-md-2">
+        <h2>上手俐落，佇正咧在我<span style="color:var(--cyan);">Chill</span>手</h2>
+        <p>口袋一塞，帥氣出發</p>
+      </div>
+      <div class="col-md-6 fade-up order-md-1">
+        <div class="carousel-wrap">
+          <div class="carousel-track-inner" id="cTrack">
+            <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/chill_img_white.webp?v=20260701" alt="Chill in hand">
+            <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/chill_img_black.webp?v=20260701" alt="Chill in hand black">
+            <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img4.webp?v=20260701" alt="Chill pocket">
+          </div>
+          <button class="c-btn prev" onclick="carousel(-1)">&#8592;</button>
+          <button class="c-btn next" onclick="carousel(1)">&#8594;</button>
+        </div>
+        <div class="carousel-dots" id="cDots">
+          <div class="c-dot active" onclick="goSlide(0)"></div>
+          <div class="c-dot" onclick="goSlide(1)"></div>
+          <div class="c-dot" onclick="goSlide(2)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COLOR SECTION ══ -->
+<section class="feat-section" style="background:var(--gray-bg);">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-6 fade-up">
+        <h2>放手玩色，看書更 Chill！</h2>
+        <p>生動色彩、書多好逛、直覺介面，新世代國民機！</p>
+      </div>
+      <div class="col-md-6 fade-up">
+        <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img4.webp?v=20260701"
+             alt="放手玩色" class="feat-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SINGLE HAND SECTION ══ -->
+<section class="feat-section" style="background:#fff;">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-6 fade-up order-md-2">
+        <h2>順手翻頁，單手也 Chill！</h2>
+        <p>剛剛好的重心平衡，左右手都好握，閱讀最自由</p>
+      </div>
+      <div class="col-md-6 fade-up order-md-1">
+        <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img5_white.webp?v=20260701"
+             alt="單手閱讀" class="feat-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LIGHT SECTION ══ -->
+<section class="light-section">
+  <h2 class="fade-up">巧手調光，日夜好 Chill</h2>
+  <p class="fade-up">雙色閱讀燈，冷暖色溫好舒適</p>
+  <div class="light-wrap fade-up" id="lightWrap">
+    <img class="light-img-base"
+         src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img6.webp?v=20260701"
+         alt="日間閱讀燈">
+    <img class="light-img-over"
+         src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img6_night.webp?v=20260701"
+         alt="夜間閱讀燈">
+  </div>
+  <div class="light-toggle-row">
+    <button class="l-btn active" id="lBtnDay" onclick="setLight('day')">日間</button>
+    <button class="l-btn" id="lBtnNight" onclick="setLight('night')">夜間</button>
+  </div>
+</section>
+
+<!-- ══ STYLE SECTION ══ -->
+<section class="style-section">
+  <div class="fade-up">
+    <h2>出手有型，風格都 Chill</h2>
+    <p>沉靜大方暗夜黑／活潑跳色迷月白</p>
+  </div>
+  <div class="style-grid fade-up">
+    <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img7.webp?v=20260701" alt="暗夜黑">
+    <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img8.webp?v=20260701" alt="迷月白">
+    <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img9.webp?v=20260701" alt="風格1">
+    <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/img10.webp?v=20260701" alt="風格2">
+  </div>
+</section>
+
+<!-- ══ SPEC BUTTON ══ -->
+<section class="spec-section">
+  <a href="index/product/mooink-chill" class="btn-spec">詳細規格&amp;比較</a>
+</section>
+
+<!-- ══ FAQ ══ -->
+<div class="faq-outer">
+  <div class="faq-inner">
+    <h2>FAQ</h2>
+    <div class="faq-cat-title">硬體與規格相關</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 看起來像手機，可以插 SIM 卡通話嗎？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">不支援，6 吋 mooInk Chill 是一支手機大小的「彩色電子書閱讀器」，是為了讓您在戶外行動或通勤時也能專注閱讀而設計打造的。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 重量是多少？好握好拿嗎？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">6 吋 mooInk Chill 約 170 克輕盈，剛剛好的重心平衡，一手握持輕鬆閱讀，口袋一塞，隨時出發。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 的色彩表現如何？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">6 吋 mooInk Chill 内建 7 種色彩模式（標準 / 加粗 / 漫畫 / 雜誌 / 照片 / 繪本 / 灰階）可在閲讀不同類型的書籍時做切換，也可以依照自己的喜好去調整 7 種色彩模式的對比度 / 鮮艷度 / 飽和度。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 是否有實體按鍵？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">有，6 吋 mooInk Chill 有一組實體上下翻頁鍵和一個實體快捷鍵。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 可以存放多少本書？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">6 吋 mooInk Chill 的儲存空間為 64 GB，讀者可儲存電子書的容量至少 50 GB，相當於容納近 5,000 本商管書籍；以漫畫和雜誌來說，則可容納近 250 本。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 可以聆聽有聲書嗎？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">6 吋 mooInk Chill 並無內建喇叭或耳機孔，但可外接藍牙耳機或藍牙喇叭聆聽有聲書。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 螢幕可以旋轉變換閱讀角度嗎？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">可以，6 吋 mooInk Chill 的顯示設定中，螢幕方向可以一鍵旋轉 180 度（上下顛倒）。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Q：6 吋 mooInk Chill 支援深色主題（黑底白字）嗎？
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">不支援。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ACCESSORIES ══ -->
+<section class="acc-section">
+  <h2>配件輕鬆搭配，Chill更升級！</h2>
+  <div class="acc-grid">
+    <a href="#" class="acc-card">
+      <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/accessory1.webp?v=20260701" alt="6 吋雙料透明保護殼">
+      <div class="acc-card-body">
+        <div class="acc-name">6 吋雙料透明保護殼</div>
+        <div class="acc-cta">查看詳細</div>
+      </div>
+    </a>
+    <a href="#" class="acc-card">
+      <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/accessory2.webp?v=20260701" alt="扭蛋五花">
+      <div class="acc-card-body">
+        <div class="acc-name">扭蛋五花</div>
+        <div class="acc-cta">查看詳細</div>
+      </div>
+    </a>
+    <a href="#" class="acc-card">
+      <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/accessory3.webp?v=20260701" alt="五花夾娃娃">
+      <div class="acc-card-body">
+        <div class="acc-name">五花夾娃娃</div>
+        <div class="acc-cta">查看詳細</div>
+      </div>
+    </a>
+    <a href="#" class="acc-card">
+      <img src="https://cdn.readmoo.com/images/store/mooink-series/mooink-chill/accessory4.webp?v=20260701" alt="牛排五花">
+      <div class="acc-card-body">
+        <div class="acc-name">牛排五花</div>
+        <div class="acc-cta">查看詳細</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer">
+  <img src="https://cdn.readmoo.com/images/store/mooink-series/foot_logo.png" alt="Readmoo">
+  <p>Copyright &copy; eCrowd Media, Inc.</p>
+</footer>
+
+
+<script>
+  /* ── Hero Float After Slide-In ── */
+  const hw = document.getElementById('heroWhite');
+  const hb = document.getElementById('heroBlack');
+
+  hw.addEventListener('animationend', () => {
+    hw.style.animation = 'none';
+    hw.style.transform = 'rotate(-3deg)';
+    hw.style.animation = 'floatL 5s ease-in-out infinite';
+  }, { once: true });
+
+  hb.addEventListener('animationend', () => {
+    hb.style.animation = 'none';
+    hb.style.transform = 'rotate(3deg)';
+    hb.style.animation = 'floatR 5s ease-in-out 0.6s infinite';
+  }, { once: true });
+
+  /* ── Carousel ── */
+  let slide = 0;
+  const track = document.getElementById('cTrack');
+  const imgs = track.querySelectorAll('img');
+  const dots = document.querySelectorAll('.c-dot');
+
+  function goSlide(n) {
+    slide = (n + imgs.length) % imgs.length;
+    track.style.transform = `translateX(-${slide * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === slide));
+  }
+
+  function carousel(dir) { goSlide(slide + dir); }
+
+  setInterval(() => carousel(1), 3800);
+
+  /* ── Light Toggle ── */
+  let lightState = 'day';
+  function setLight(mode) {
+    lightState = mode;
+    document.getElementById('lightWrap').classList.toggle('night', mode === 'night');
+    document.getElementById('lBtnDay').classList.toggle('active', mode === 'day');
+    document.getElementById('lBtnNight').classList.toggle('active', mode === 'night');
+  }
+
+  // Auto cycle
+  setInterval(() => {
+    lightState = lightState === 'day' ? 'night' : 'day';
+    setLight(lightState);
+  }, 2800);
+
+  /* ── FAQ Toggle ── */
+  function toggleFaq(el) {
+    el.closest('.faq-item').classList.toggle('open');
+  }
+
+  /* ── Scroll Fade-Up ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+</script>
+</body>
+</html>
