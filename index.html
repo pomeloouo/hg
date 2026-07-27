@@ -341,12 +341,23 @@
         <h1>禾鉅家電 攜手出擊</h1>
 
         <div class="mb-3">
-<h3>KINYO 電子遙控直立循環電風扇 / ACF-1138</h3>
-<h3>BOSEN高清智能迷你投影機</h3>
-<h3>飛利浦 43型4K安卓聯網顯示器</h3>
-<h3>飛利浦奈米級抗敏空氣清淨機AC1711/80(加贈濾網)_12-14坪</h3>
-<h3>象印日製10人份IH豪熱沸騰微電腦電子鍋</h3>
-                 </div>
+          <label for="productSelect" style="font-size:13px;color:#666;margin-bottom:8px;display:block;">選擇商品，直接跳轉：</label>
+          <select id="productSelect" onchange="jumpToSection(this.value)"
+            style="width:100%;padding:10px 14px;font-size:15px;font-weight:600;
+                   border:2px solid #ddd;border-radius:10px;background:#fff;
+                   color:#212529;cursor:pointer;appearance:none;
+                   background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path fill=%22%23555%22 d=%22M6 8L0 0h12z%22/></svg>');
+                   background-repeat:no-repeat;background-position:right 14px center;
+                   outline:none;transition:border-color .2s;">
+            <option value="">── 請選擇商品 ──</option>
+            <option value="sec-electrolux">Electrolux 伊萊克斯300系列無線吸塵器</option>
+            <option value="sec-kinyo">KINYO 電子遙控直立循環電風扇 / ACF-1138</option>
+            <option value="sec-bosen">BOSEN 高清智能迷你投影機</option>
+            <option value="sec-philips-tv">飛利浦 43型4K安卓聯網顯示器</option>
+            <option value="sec-philips-air">飛利浦奈米級抗敏空氣清淨機 AC1711/80</option>
+            <option value="sec-zojirushi">象印日製10人份IH豪熱沸騰微電腦電子鍋</option>
+          </select>
+        </div>
         
       
         </div>
@@ -363,16 +374,43 @@
 <!-- ══ TEAM TAIWAN SECTION ══ -->
 <section class="team-section">
   <div class="fade-up">
-    <h2>家電大集合˙輕鬆打造幸福家!</h2>
+    <h2>家電大集合 輕鬆打造幸福家!</h2>
       </div>
   <div class="team-feature-img mt-5 fade-up">
     <img src="./img/faimly.png"
          alt="mooInk Chill 產品特色">
   </div>
 </section>
+<!-- ══ 300SECTION ══ -->
+<section class="weight-section" id="sec-electrolux">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-5 fade-up">
+        <h2>Electrolux 伊萊克斯300系列無線吸塵器</h2>
+        <p>長效持久續航力</p>
+        <p>附多功能配件與壁掛架</p>
+        <p>強效氣旋分離技術</p>
+        <p>免碰髒污瞬速倒塵</p>
+        <p>無負擔輕盈手感</p>
+      </div>
+      <div class="col-md-7 fade-up">
+        <div class="product-360"
+             data-folder="img/360/"
+             data-filename="EFP31312-{index}.jpg"
+             data-amount="91"
+             data-speed="70"
+             data-drag-speed="3"
+             data-autoplay="true">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
 <!-- ══ 1SECTION ══ -->
-<section class="weight-section">
+<section class="feat-section" id="sec-bosen">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-md-5 fade-up">
@@ -391,7 +429,7 @@
 </section>
 
 <!-- ══  2SECTION ══ -->
-<section class="feat-section" style="background:#fff; padding:80px 0;">
+<section class="weight-section" id="sec-philips-tv" style="background:#fff; padding:80px 0;">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-md-6 fade-up order-md-2">
@@ -412,8 +450,8 @@
   </div>
 </section>
 
-<!-- ══ COLOR SECTION ══ -->
-<section class="feat-section" style="background:var(--gray-bg);">
+<!-- ══ 2 SECTION ══ -->
+<section class="feat-section" id="sec-philips-air" style="background:var(--gray-bg);">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-md-6 fade-up">
@@ -423,7 +461,7 @@
 
   <p>最低至15分貝</p>
 
-  <p>榮獲ECARF歐洲抗敏認證/p>
+  <p>榮獲ECARF歐洲抗敏認證</p>
 
   <p>經德國IUTA實驗室認證PM0.003濾除99.99</p>
 
@@ -439,8 +477,8 @@
   </div>
 </section>
 
-<!-- ══ SINGLE HAND SECTION ══ -->
-<section class="feat-section" style="background:#fff;">
+<!-- ══ 3 SECTION ══ -->
+<section class="weight-section" id="sec-zojirushi" style="background:#fff;">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-md-6 fade-up order-md-2">
@@ -460,8 +498,8 @@
   </div>
 </section>
 
-<!-- ══ LIGHT SECTION ══ -->
-<section class="feat-section" style="background:#fff;">
+<!-- ══ 4 SECTION ══ -->
+<section class="feat-section" id="sec-kinyo" style="background:#fff;">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-md-6 fade-up order-md-2">
@@ -481,7 +519,7 @@
   </div>
 </section>
 
-<!-- ══ STYLE SECTION ══ -->
+<!-- ══ 5 SECTION ══ -->
 <section class="style-section">
   <div class="fade-up">
     <h2>廣告詞</h2>
@@ -582,6 +620,7 @@
 
 
 <script src="js/lottie.min.js"></script>
+<script src="js/product360.js"></script>
 <script>
   /* ── Hero Lottie (0121_chill) ── */
   lottie.loadAnimation({
@@ -600,6 +639,18 @@
     autoplay: true,
     path: 'animations/chill--2.json'
   });
+
+  /* ── 商品下拉選單跳轉 ── */
+  function jumpToSection(id) {
+    if (!id) return;
+    const target = document.getElementById(id);
+    if (!target) return;
+    const navH = document.querySelector('.site-nav')?.offsetHeight || 60;
+    const top = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+    window.scrollTo({ top, behavior: 'smooth' });
+    // 選完重置，讓使用者可以重複選同一項
+    setTimeout(() => document.getElementById('productSelect').value = '', 800);
+  }
 
   /* ── Light Toggle ── */
   let lightState = 'day';
