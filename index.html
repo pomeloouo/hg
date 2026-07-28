@@ -315,6 +315,58 @@
       .style-grid { grid-template-columns: 1fr; }
       .nav-right .hide-mobile { display: none !important; }
     }
+
+
+    .fr_home {
+      position: fixed;
+      right: 20px;
+      bottom: 96px;          /* LINE 按鈕(56px) + 間距(12px) + 自身一半 */
+      z-index: 9999;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #1e2d40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,.25);
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      color: #fff;
+      font-size: 22px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .fr_home:hover {
+      transform: translateY(-3px) scale(1.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,.35);
+      color: #fff;
+    }
+    /* ── 浮動 LINE 按鈕 ── */
+    .fr_line {
+      position: fixed;
+      right: 20px;
+      bottom: 28px;
+      z-index: 9999;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #06C755;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(6,199,85,.45);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .fr_line:hover {
+      transform: translateY(-3px) scale(1.08);
+      box-shadow: 0 8px 20px rgba(6,199,85,.55);
+    }
+    .fr_line img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
@@ -392,6 +444,7 @@
         <p>強效氣旋分離技術</p>
         <p>免碰髒污瞬速倒塵</p>
         <p>無負擔輕盈手感</p>
+      <a href="product.html?id=1" class="btn-spec">詳細規格 &amp; 比較</a>
       </div>
       <div class="col-md-7 fade-up">
         <div class="product-360"
@@ -420,6 +473,7 @@
         <p>WIFI 高速連線｜連得快 看得爽 不卡不延遲</p>
        <p>支援多APP 隨心安裝</p>
         <p>輕巧便攜｜收納簡單 攜帶無負擔</p>
+      <a href="product.html?id=6" class="btn-spec">詳細規格 &amp; 比較</a>
                 </div>
       <div class="col-md-7 fade-up">
         <img src="./img/origin.jpg""alt="mooInk Chill 輕巧" class="weight-img">
@@ -440,6 +494,7 @@
 <p>聯發科四核心處理器2G/32G</p>
 <p>三個國際最高級護眼認證</p>
 <p>專利硬體低藍光-舒視藍</p>
+      <a href="product.html?id=4" class="btn-spec">詳細規格 &amp; 比較</a>
       </div>
       <div class="col-md-6 fade-up order-md-1">
  <img src="./img/phtv.webp""alt="" class="weight-img">
@@ -467,6 +522,7 @@
 
   <p>每分鐘6萬次自動掃描空氣污染物</p>
   <p>自動感光設計，依據環境光線調整亮度</p>
+      <a href="product.html?id=5" class="btn-spec">詳細規格 &amp; 比較</a>
 
       </div>
       <div class="col-md-6 fade-up">
@@ -488,6 +544,7 @@
 <p>多重健康選項：可炊煮糙米、活性糙米、什穀米</p>
 <p>再加熱功能，重拾米飯溫熱保有美味</p>
 <p>大型蒸氣口 & 可拆洗內蓋，簡易清洗好容易</p>
+      <a href="product.html?id=6" class="btn-spec">詳細規格 &amp; 比較</a>
 
       </div>
       <div class="col-md-6 fade-up order-md-1">
@@ -509,6 +566,7 @@
 <p>可拆卸式前網，清潔機身不費力</p>
 <p>6米以上長風距，穩定不斷流</p>
 <p>大角度自動左右擺頭，全室清涼送風</p>
+      <a href="product.html?id=2" class="btn-spec">詳細規格 &amp; 比較</a>
 
       </div>
       <div class="col-md-6 fade-up order-md-1">
@@ -531,11 +589,6 @@
     <img src="./img/hg.jpg" alt="風格1">
     <img src="./img/hg.jpg" alt="風格1">
   </div>
-</section>
-
-<!-- ══ SPEC BUTTON ══ -->
-<section class="spec-section">
-  <a href="index/product/mooink-chill" class="btn-spec">詳細規格&amp;比較</a>
 </section>
 
 <!-- ══ FAQ ══ -->
@@ -680,5 +733,13 @@
   document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
 
 </script>
+<!-- ── 浮動：回頂部 ── -->
+<a class="fr_home" href="#" title="回到頂部" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑</a>
+
+<!-- ── 浮動 LINE 按鈕 ── -->
+<a class="fr_line" href="https://line.me/ti/p/KkJwi5DEfz" target="_blank">
+  <img src="./line.svg" alt="LINE">
+</a>
+
 </body>
 </html>
