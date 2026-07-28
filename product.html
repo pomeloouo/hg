@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">商品詳細規格</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; }
+  .navbar { background: #1e2d40; height: 52px; display: flex; align-items: center; padding: 0 24px; position: sticky; top: 0; z-index: 100; gap: 16px; }
+  .navbar-brand { color: #fff; font-size: 22px; font-weight: 900; letter-spacing: 1px; text-decoration: none; }
+  .navbar-brand span { color: #ffd700; }
+  .navbar-select-wrap { flex: 1; max-width: 480px; display: flex; flex-direction: column; justify-content: center; }
+  .navbar-select-label { font-size: 11px; color: rgba(255,255,255,.65); margin-bottom: 3px; line-height: 1; }
+  .navbar-select { width: 100%; padding: 6px 36px 6px 12px; font-size: 13px; font-weight: 600; font-family: inherit; border: none; border-radius: 6px; background: rgba(255,255,255,.15); color: #fff; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path fill=%22%23ffffff%22 d=%22M6 8L0 0h12z%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center; outline: none; transition: background .2s; }
+  .navbar-select:hover { background-color: rgba(255,255,255,.25); }
+  .navbar-select option { background: #1e2d40; color: #fff; font-weight: 400; }
+  .breadcrumb-bar { background: #fff; padding: 10px 24px; font-size: 12px; color: #888; border-bottom: 1px solid #e8e8e8; }
+  .breadcrumb-bar a { color: #888; text-decoration: none; }
+  .breadcrumb-bar a:hover { color: #2c6ea6; }
+  .breadcrumb-bar span { color: #333; }
+  .page-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+  .product-card { background: #fff; border-radius: 8px; display: flex; gap: 32px; padding: 28px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .img-col { flex: 0 0 420px; }
+  .main-img-wrap { position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; border: 1px solid #eee; border-radius: 6px; background: #fafafa; }
+  .main-img-wrap .slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .5s ease; }
+  .main-img-wrap .slide.active { opacity: 1; }
+  .main-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .slide-placeholder { width: 80%; height: 80%; background: #f0f0f0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #aaa; font-size: 14px; gap: 8px; text-align: center; }
+  .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,.35); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; z-index: 5; transition: background .2s; }
+  .carousel-arrow:hover { background: rgba(0,0,0,.6); }
+  .arrow-prev { left: 8px; }
+  .arrow-next { right: 8px; }
+  .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; cursor: pointer; transition: background .2s; border: none; }
+  .dot.active { background: #1e2d40; }
+  .thumb-strip { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .thumb { width: 64px; height: 64px; border: 2px solid #e0e0e0; border-radius: 4px; overflow: hidden; cursor: pointer; flex-shrink: 0; background: #fafafa; transition: border-color .2s; }
+  .thumb.active { border-color: #2c6ea6; }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .info-col { flex: 1; }
+  .brand-tag { display: inline-block; background: #eef3f8; color: #2c6ea6; border: 1px solid #b3cde0; border-radius: 3px; font-size: 11px; padding: 2px 8px; margin-bottom: 10px; font-weight: 600; }
+  .product-title { font-size: 20px; font-weight: 700; line-height: 1.45; margin-bottom: 6px; color: #222; }
+  .model-no { font-size: 13px; color: #888; margin-bottom: 18px; }
+  .divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
+  .price-block { margin-bottom: 20px; }
+  .price-label { font-size: 12px; color: #999; margin-bottom: 4px; }
+  .price-sale { font-size: 32px; font-weight: 900; color: #c0392b; letter-spacing: -0.5px; }
+  .price-sale sup { font-size: 18px; vertical-align: super; }
+  .price-orig { font-size: 14px; color: #aaa; text-decoration: line-through; margin-left: 10px; }
+  .key-features { background: #f0f5fa; border-left: 3px solid #2c6ea6; border-radius: 0 6px 6px 0; padding: 12px 16px; margin-bottom: 20px; }
+  .key-features ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .key-features li { font-size: 13px; color: #555; display: flex; align-items: center; gap: 8px; }
+  .key-features li::before { content: "✓"; color: #2c6ea6; font-weight: 700; flex-shrink: 0; }
+  .specs-quick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .spec-chip { background: #f8f8f8; border-radius: 6px; padding: 10px; text-align: center; }
+  .spec-chip .val { font-size: 16px; font-weight: 700; color: #333; }
+  .spec-chip .key { font-size: 11px; color: #888; margin-top: 2px; }
+  .tab-section { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden; }
+  .tab-bar { display: flex; border-bottom: 2px solid #f0f0f0; }
+  .tab-btn { flex: 1; padding: 16px; text-align: center; font-size: 15px; font-weight: 600; color: #666; background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color .2s, border-color .2s; }
+  .tab-btn.active { color: #2c6ea6; border-bottom-color: #2c6ea6; }
+  .tab-panel { display: none; padding: 28px; }
+  .tab-panel.active { display: block; }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .feature-card { background: #f0f5fa; border-radius: 8px; padding: 20px 16px; text-align: center; border: 1px solid #c9ddf0; }
+  .feature-icon { font-size: 32px; margin-bottom: 10px; }
+  .feature-title { font-size: 14px; font-weight: 700; color: #222; }
+  .feature-specs { background: #f8f8f8; border-radius: 8px; padding: 20px 24px; }
+  .feature-specs h4 { font-size: 15px; font-weight: 700; margin-bottom: 16px; color: #333; border-left: 3px solid #2c6ea6; padding-left: 10px; }
+  .feature-specs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 24px; }
+  .fs-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+  .fs-icon { color: #2c6ea6; flex-shrink: 0; }
+  .fs-text { color: #555; }
+  .spec-table { width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid #e0e0e0; }
+  .spec-table th, .spec-table td { padding: 13px 18px; border-bottom: 1px solid #e8e8e8; vertical-align: top; text-align: left; }
+  .spec-table th { background: #f7f7f7; color: #555; font-weight: 600; white-space: nowrap; width: 130px; }
+  .spec-table td { color: #333; line-height: 1.75; }
+  .spec-table td a { color: #2c6ea6; text-decoration: none; }
+  .spec-table tr:last-child th, .spec-table tr:last-child td { border-bottom: none; }
+  .spec-table td.multiline { white-space: pre-line; }
+  .fr_home, .fr_line { position: fixed; right: 20px; z-index: 9999; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,.22); text-decoration: none; transition: transform .2s, box-shadow .2s; }
+  .fr_home:hover, .fr_line:hover { transform: translateY(-3px) scale(1.08); box-shadow: 0 8px 20px rgba(0,0,0,.32); }
+  .fr_home { bottom: 96px; background: #1e2d40; color: #fff; font-size: 22px; }
+  .fr_home:hover { color: #fff; }
+  .fr_line { bottom: 28px; background: #06C755; box-shadow: 0 4px 14px rgba(6,199,85,.4); }
+  .fr_line:hover { box-shadow: 0 8px 20px rgba(6,199,85,.55); }
+  .fr_line img { width: 34px; height: 34px; object-fit: contain; }
+  @media (max-width: 800px) { .product-card { flex-direction: column; } .img-col { flex: unset; } .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .feature-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">禾鉅<span>家電</span></a>
+  <div class="navbar-select-wrap">
+    <span class="navbar-select-label">選擇商品，直接跳轉：</span>
+    <select class="navbar-select" id="navSelect" onchange="if(this.value) window.location.href=this.value">
+      <option value="">── 請選擇商品 ──</option>
+      <option value="product.html?id=1">① Electrolux 伊萊克斯 300系列無線吸塵器</option>
+      <option value="product.html?id=2">② KINYO 電子遙控直立循環電風扇 ACF-1138</option>
+      <option value="product.html?id=3">③ LG CordZero R5 濕拖掃地機器人</option>
+      <option value="product.html?id=4">④ 三星 Soundbar HW-B650F 3.1聲道</option>
+      <option value="product.html?id=5">⑤ Panasonic 大容量集塵吸塵器 MC-SBM20</option>
+      <option value="product.html?id=6">⑥ 象印日製10人份IH豪熱沸騰微電腦電子鍋</option>
+          <option value="product.html?id=7">⑦ PANASONIC 24L燒烤微波爐</option>
+      <option value="product.html?id=8">⑧ 飛利浦 1+1雙研磨美式咖啡機</option>
+</select>
+  </div>
+</nav>
+
+<div class="breadcrumb-bar">
+  <a href="index.html">首頁</a> &nbsp;›&nbsp;
+  <span id="breadcrumb"></span>
+</div>
+
+<div class="page-wrap">
+  <div class="product-card">
+    <div class="img-col">
+      <div class="main-img-wrap" id="mainCarousel">
+        <button class="carousel-arrow arrow-prev" onclick="changeSlide(-1)">&#8249;</button>
+        <button class="carousel-arrow arrow-next" onclick="changeSlide(1)">&#8250;</button>
+      </div>
+      <div class="carousel-dots" id="dotsWrap"></div>
+      <div class="thumb-strip" id="thumbStrip"></div>
+    </div>
+    <div class="info-col">
+      <div class="brand-tag" id="brandTag"></div>
+      <h1 class="product-title" id="productTitle"></h1>
+      <div class="model-no" id="modelNo"></div>
+      <hr class="divider">
+      <div class="price-block">
+        <div class="price-label">建議售價</div>
+        <span class="price-sale" id="priceSale"></span>
+        <span class="price-orig" id="priceOrig" style="display:none"></span>
+      </div>
+      <div class="key-features"><ul id="pointsList"></ul></div>
+      <div class="specs-quick" id="chipsWrap"></div>
+    </div>
+  </div>
+
+  <div class="tab-section">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab(0,this)">商品特色</button>
+      <button class="tab-btn" onclick="switchTab(1,this)">商品規格</button>
+    </div>
+    <div class="tab-panel active" id="panel-0">
+      <div class="feature-grid" id="featGrid"></div>
+      <div class="feature-specs">
+        <h4 id="featH4"></h4>
+        <div class="feature-specs-grid" id="featSpecsGrid"></div>
+      </div>
+    </div>
+    <div class="tab-panel" id="panel-1">
+      <table class="spec-table"><tbody id="specTableBody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<a class="fr_home" href="index.html" title="回到首頁">&#8962;</a>
+<a class="fr_line" href="https://line.me/ti/p/KkJwi5DEfz" target="_blank">
+  <img src="./line.svg" alt="LINE">
+</a>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  ★ 商品資料區 ★
+//  新增商品：在陣列末尾加一個 {...} 物件即可
+//  修改商品：找到對應的 id，直接改值
+// ════════════════════════════════════════════════════════
+const PRODUCTS = [
+
+  // ── 商品 1：Electrolux 無線吸塵器 ──────────────────
+  {
+    id: 1,
+    brand:      'Electrolux 伊萊克斯',
+    title1:     '極適家居300無線吸塵器',
+    title2:     '鎢鐵灰 EFP31312',
+    model:      '型號：EFP31312 ／ BSMI：R33428',
+    breadcrumb: 'Electrolux 300系列 EFP31312 無線吸塵器',
+    priceSale:  '5,900',
+    priceOrig:  '',
+    imgFolder:  '1',
+    imgFiles:   ['1.jpg','2.avif','3.avif','4.avif','5.avif','6.avif'],
+    points: [
+      '長效持久續航力（低速 40 分鐘）',
+      '強效氣旋分離技術、99% 高效集塵去污',
+      '免碰髒污瞬速倒塵設計',
+      '無負擔輕盈手感（主機僅 1.4 kg）',
+      '附多功能配件與壁掛架',
+      'HEPA 等級可水洗濾網',
+    ],
+    chips: [
+      { val:'40 min', key:'低速續航' },
+      { val:'0.5 L',  key:'集塵容量' },
+      { val:'2.42 kg',key:'整機重量' },
+    ],
+    featCards: [
+      { icon:'⚡', title:'長效持久續航力' },
+      { icon:'🌀', title:'強效氣旋分離技術' },
+      { icon:'🗑️',title:'免碰髒污瞬速倒塵' },
+      { icon:'🪶', title:'無負擔輕盈手感' },
+      { icon:'✨', title:'99% 高效集塵去污' },
+      { icon:'🔧', title:'附多功能配件與壁掛架' },
+    ],
+    featH4: '無線吸塵器 規格一覽',
+    featSpecs: [
+      '集塵方式：集塵盒（0.5 L）',
+      '電壓：21.6 V',
+      '最大運轉音量：≤ 80 dB',
+      '馬達功率：150 W',
+      '電池類型低速運轉使用時間：40 分鐘',
+      '高速運轉使用時間：16 分鐘',
+      '充電時間：300 分鐘',
+      '吸力段數：2 段數',
+      '電池電量指示燈：有',
+      '濾網類型：HEPA 等級可水洗濾網',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'Electrolux 伊萊克斯', link:true },
+      { th:'類型',     td:'無線、HEPA濾網、手持/直立' },
+      { th:'適用於',   td:'石材、大理石、磁磚、木地板、乾式專用' },
+      { th:'配件',     td:'2合1縫隙/毛刷吸頭, 纖維布料吸頭, 壁掛架套件' },
+    ],
+    specDetail: '·輕盈手感、續航力持久強效氣旋分離技術\n·高效集塵去污、免碰髒污瞬速倒塵\n·附多功能配件與壁掛架\n·型號:EFP31312\n·機體尺寸:約寬25x深22.2x高112.8cm\n·重量:2.42kg(手持主機1.4kg)\n·集塵盒容量:約0.5L',
+  },
+
+  // ── 商品 2：KINYO 電風扇 ──────────────────────────
+  {
+    id: 2,
+    brand:      'KINYO',
+    title1:     'KINYO 電子遙控直立循環電風扇',
+    title2:     '白',
+    model:      'ACF-1138',
+    breadcrumb: 'KINYO 電子遙控直立循環電風扇 ACF-1138',
+    priceSale:  '1,290',
+    priceOrig:  '',
+    imgFolder:  '2',
+    imgFiles:   ['1.webp','2.webp','3.webp','4.webp','5.webp','6.webp','7.webp','8.webp','9.webp'],
+    points: [
+      '循環風扇網罩設計，大幅提升對流效率',
+      '手動上下仰角調節，吹拂角度更全面',
+      '大角度自動左右擺頭，全室清涼送風',
+      '3檔風速調節，柔和到強勁',
+      '3種模式選擇：連續風、自然風、睡眠風',
+      '1-12小時定時功能，自訂關機時間',
+    ],
+    chips: [
+      { val:'14 吋', key:'扇葉尺寸' },
+      { val:'6 m+',  key:'長風距' },
+      { val:'45 W',  key:'額定功率' },
+    ],
+    featCards: [
+      { icon:'📱', title:'無線遙控操作' },
+      { icon:'🌬️', title:'三段風速調節' },
+      { icon:'🔄', title:'三種模式' },
+      { icon:'⏱️', title:'1-12小時定時' },
+      { icon:'↕️', title:'手動仰角調節' },
+      { icon:'↔️', title:'大角度自動擺頭' },
+    ],
+    featH4: '電風扇 規格一覽',
+    featSpecs: [
+      '循環風扇網罩設計，大幅提升對流效率',
+      '手動上下仰角調節，吹拂角度更全面',
+      '大角度自動左右擺頭，全室清涼送風',
+      '3檔風速調節，柔和到強勁',
+      '6米以上長風距，穩定不斷流',
+      '5片式扇葉風感柔順',
+      '功能觸控式，直覺簡單上手',
+      '附無線遙控器，不用起身也能輕鬆操作',
+      '14吋大小，適用4-10坪空間',
+      '後側貼心手提設計，方便移動',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'KINYO', link:true },
+      { th:'類型',     td:'電風扇' },
+      { th:'適用於',   td:'居家' },
+      { th:'配件',     td:'遙控器、風扇扇葉' },
+    ],
+    specDetail: '額定電壓：110V\n額定頻率：60HZ\n總額定消耗電功率：45W\n材質：ABS塑膠、PP塑膠\n噪音值：<65dB\n電源線長：150±10CM\nBSMI：R4A106',
+  },
+
+  // ── 商品 3：LG CordZero R5 濕拖掃地機器人 ──────────
+  {
+    id: 3,
+    brand:      'LG',
+    title1:     'CordZero™ R5 濕拖掃地機器人',
+    title2:     '石墨黑',
+    model:      'R5-PROBL',
+    breadcrumb: 'LG CordZero™ R5 濕拖掃地機器人',
+    priceSale:  '12,900',
+    priceOrig:  '',
+    imgFolder:  '3',
+    imgFiles:   ['1.avif','2.avif','3.avif','4.avif','5.avif','6.avif','7.avif','8.avif','9.avif','10.avif','11.jpg'],
+    points: [
+      '乾吸濕拖 一次完成',
+      '360 LiDAR 雷射偵測並繪製環境圖面',
+      'ThinQ App 遠端控制、設定禁區、或限定打掃區域',
+      '智慧吸力調整，偵測到地毯時吸力自動增強',
+      '懸崖感測器偵測並避開階差',
+      '全自動智慧給水裝置',
+    ],
+    chips: [
+      { val:'乾吸濕拖 一次完成',                    key:'' },
+      { val:'360 LiDAR 雷射偵測並繪製環境圖面',      key:'' },
+      { val:'ThinQ App 遠端控制、設定禁區、或限定打掃區域', key:'' },
+    ],
+    featCards: [
+      { icon:'⚡', title:'偵測家中環境達到智慧順暢的清潔' },
+      { icon:'🌀', title:'精心清除牆壁和角落灰塵' },
+      { icon:'🗑️',title:'乾吸濕拖一次完成' },
+      { icon:'🪶', title:'當偵測到地毯吸力自動加強' },
+      { icon:'✨', title:'遠端遙控清掃即時監控' },
+      { icon:'🔧', title:'語音辨識' },
+    ],
+    featH4: '掃地機器人 特色一覽',
+    featSpecs: [
+      '全自動智慧給水裝置',
+      '清潔中自動給水 保持抹布濕潤',
+      '280 毫升水箱 一次拖完寬廣區域',
+      '智慧吸力調整',
+      '當偵測到地毯，吸力將自動加強',
+      '根據您的清潔需求選擇吸力等級',
+      '節省時間',
+      '乾吸濕拖一次完成',
+      '吸塵同時拖地，快速而有效率的清潔。',
+      '遠端遙控清掃、即時監控',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'LG', link:true },
+      { th:'類型',     td:'掃地機器人' },
+      { th:'適用於',   td:'居家空間' },
+      { th:'配件',     td:'拖布(無遙控器)' },
+    ],
+    specDetail: '型號：NP-HDF18\n顏色：石墨黑\n容量：集塵盒容量 (L)0.4\n尺寸：產品尺寸 (寬x高x深mm)\n342 x 94.5 x 342\n充電時間:5H\n水箱:280ml\nHEPA 濾網Yes\n光學雷射感測器Yes\n最長運行時間（分鐘 / 電池）（正常模式）140min\n重量：3.1kg\n電壓：110V',
+  },
+
+  // ── 商品 4：三星 Soundbar HW-B650F ───────────────────
+  {
+    id: 4,
+    brand:      '三星SANSUNG',
+    title1:     'Soundbar HW-B650F 3.1 聲道 家庭劇院',
+    title2:     '黑',
+    model:      'HW-B650F',
+    breadcrumb: 'Soundbar HW-B650F 3.1 聲道 家庭劇院',
+    priceSale:  '10,900',
+    priceOrig:  '',
+    imgFolder:  '4',
+    imgFiles:   ['1.avif','2.jpg','3.avif','4.avif','5.avif','6.avif','7.avif','8.avif'],
+    points: [
+      '3.1 聲道 清晰對話 聲歷其境',
+      'AI 魔幻音場 三星影音商品就是天生一對',
+      '智慧音量調節技術 針對影像內容優化音效表現',
+      'Dolby Audio / DTS Virtual:X 模擬立體環繞音效',
+      '人聲增強 不錯過每段精彩對話',
+      '遊戲模式 極致優化遊戲音效',
+    ],
+    chips: [
+      { val:'無線環繞音效 無線放大聲音體驗', key:'' },
+      { val:'藍牙多點連結',                  key:'' },
+      { val:'智慧型遙控器 單一且輕鬆操控',   key:'' },
+    ],
+    featCards: [
+      { icon:'⚡', title:'無線環繞音效 無線放大聲音體驗' },
+      { icon:'🌀', title:'HDMI ARC 透過 HDMI ARC 連接你的裝置' },
+      { icon:'🗑️',title:'Bluetooth® 藍牙多點連結 同時連結兩部行動裝置' },
+      { icon:'🪶', title:'連結 聆聽 享受 無線連接' },
+      { icon:'✨', title:'智慧型遙控器 單一且輕鬆操控' },
+      { icon:'🔧', title:'內建中置喇叭，提供清晰立體的對話效果與均衡的聲音體驗' },
+    ],
+    featH4: '喇叭 特色一覽',
+    featSpecs: [
+      '3.1 聲道',
+      '清晰對話 聲歷其境',
+      '內建中置喇叭，提供清晰立體的對話效果與均衡的聲音體驗，時刻為您的家庭娛樂增添光彩！',
+      'AI 魔幻音場',
+      '三星影音商品就是天生一對',
+      '三星獨家的 AI 魔幻音場技術通過螢幕和 Soundbar 喇叭單體提供全聲道 AI 優化的聲音，創造出強大的環繞音場，體驗前所未有的劇院級聲音。',
+      '模擬立體環繞音效',
+      '三星 Soundbar 支援 DTS Virtual:X，重新創建聲音與環繞音效，營造出立體的 3D 環繞效果，提升包覆性與立體空間感。',
+      '針對影像內容優化音效表現',
+      '透過 Soundbar 分析聲音訊號，依每個播放場景自動優化聲音表現。即便是細節聲音，也能透過分析強化影像中的音量，讓你不錯失任何關鍵片段。',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'LG', link:true },
+      { th:'類型',     td:'掃地機器人' },
+      { th:'適用於',   td:'居家空間' },
+      { th:'配件',     td:'重低音喇叭' },
+    ],
+    specDetail: '主體尺寸 (寬x高x深)860.0 x 59.4 x 75.0 mm\n重低音喇叭尺寸 (寬x高x深)184.0 x 343.0 x 295.0 mm\n\n主體2.2 kg\n重低音喇叭5.0 kg\n\nHDMI 輸入:1\nHDMI 輸出:1\nHDMI ARC:有\nHDMI CEC:有\n光纖輸入:1\n藍牙:有 (4.2)\nUSB 音樂播放:有\n智慧型單一遙控器:有',
+  },
+
+  // ── 商品 5：Panasonic 大容量集塵吸塵器 ──────────────
+  {
+    id: 5,
+    brand:      'panasonic',
+    title1:     '大容量集塵吸塵器',
+    title2:     '白',
+    model:      'MC-SBM20',
+    breadcrumb: '大容量集塵吸塵器',
+    priceSale:  '7,900',
+    priceOrig:  '',
+    imgFolder:  '5',
+    imgFiles:   ['1.avif','2.jpg','3.avif','4.avif','5.avif'],
+    points: [
+      '0.6L 大容量集塵',
+      '1 kg輕巧機身',
+      '多重過濾系統',
+      '可更換電池',
+      '集塵盒&濾網全部可水洗',
+      '電動自走 吸塵免推動',
+    ],
+    chips: [
+      { val:'第一重：上濾網',     key:'過濾集塵盒中的大灰塵顆粒和頭髮。' },
+      { val:'第二重：海綿濾網',   key:'防止灰塵堵塞濾網' },
+      { val:'第三重：2層EPA濾網', key:'過濾次微米灰塵顆粒。' },
+    ],
+    featCards: [
+      { icon:'⚡', title:'多樣化吸頭' },
+      { icon:'🌀', title:'多重過濾系統' },
+      { icon:'🗑️',title:'二合一Y型刷毛' },
+      { icon:'🪶', title:'前蓋輕薄化設計' },
+      { icon:'✨', title:'電池輕鬆更換' },
+      { icon:'🔧', title:'輕巧便利 即刻潔淨' },
+    ],
+    featH4: '吸塵器 特色一覽',
+    featSpecs: [
+      '0.6L大容量集塵',
+      '減少頻繁清理 省時省力',
+      '大空間儲存灰塵，寵物毛髮也能完全蒐集。',
+      '底部圓弧設計，清潔便利兼具美感，灰塵一傾即淨。',
+      '輕巧便利 即刻潔淨',
+      '重量僅1公斤的弧形機身設計，可輕鬆清潔高處、樓梯等狹窄空間及傢俱下方，同時易於雙手握持，減少手腕壓力。',
+      '電動自走',
+      '吸塵免推動',
+      '高扭矩馬達使刷頭旋轉並有力地向前移動，無須費力推動吸塵器也能輕鬆打掃。',
+      '電池輕鬆更換',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'panasonic', link:true },
+      { th:'類型',     td:'吸塵器' },
+      { th:'適用於',   td:'居家空間' },
+      { th:'配件',     td:'二合一Y型刷毛' },
+    ],
+    specDetail: '使用時間\n標準：30~40分*\n強勁：6分\n\n充電時間\n3小時\n\n重量\n1 kg (本體)\n1.6 kg (含延長桿、地板吸頭)\n\n尺寸\n寬220 × 深197 × 高1141 mm\n\n集塵容量\n0.6L\n\n濾網形式\n格狀濾網\n\n二合一Y型刷毛',
+  },
+
+  // ── 商品 6：象印 電子鍋 ──────────────────────────
+  {
+    id: 6,
+    brand:      'ZOJIRUSHI 象印',
+    title1:     '日製10人份IH豪熱沸騰微電腦電子鍋',
+    title2:     '銀色',
+    model:      'NP-HDF18',
+    breadcrumb: '象印日製10人份IH豪熱沸騰微電腦電子鍋 NP-HDF18',
+    priceSale:  '9,990',
+    priceOrig:  '',
+    imgFolder:  '6',
+    imgFiles:   ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg'],
+    points: [
+      'IH連續強火加熱「豪熱沸騰」，促進米飯更香Q甘甜',
+      '黑金鋼厚釜內鍋，厚度1.7mm',
+      '多重健康選項：可炊煮糙米、活性糙米、什穀米',
+      '內蓋可拆卸，橘色固定鉤設計',
+      '「再加熱」功能，重拾米飯溫熱保有美味',
+      '大型蒸氣口 & 可拆洗內蓋，簡易清洗好容易',
+    ],
+    chips: [
+      { val:'10 人', key:'容量' },
+      { val:'IH',    key:'加熱方式' },
+      { val:'日本製',key:'產地' },
+    ],
+    featCards: [
+      { icon:'🔥', title:'IH豪熱沸騰科技' },
+      { icon:'⚫', title:'黑金鋼厚釜內鍋' },
+      { icon:'🌾', title:'多重健康炊煮選項' },
+      { icon:'♨️', title:'再加熱功能' },
+      { icon:'💧', title:'可拆洗內蓋' },
+      { icon:'🍱', title:'放涼不變硬' },
+    ],
+    featH4: '電子鍋 規格一覽',
+    featSpecs: [
+      'IH電磁式加熱卓越技術',
+      '透過磁力線圈加熱，誘導內釜直接發熱，加熱更均勻',
+      '黑金鋼厚釜，強力導熱、高效保溫、防沾易清洗',
+      '豪熱沸騰：強力對流漩渦，確實傳熱至米飯中心',
+      '口感選擇：針對糙米、發芽米、五穀飯等優化模式',
+      '本體材質平滑，輕鬆擦除髒污',
+      '可拆式內蓋，水洗清潔拆卸便利',
+      '不易脫落塗層內鍋，好清洗亦可在內鍋洗米',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'ZOJIRUSHI 象印', link:true },
+      { th:'類型',     td:'電子鍋' },
+      { th:'適用坪數', td:'廚房用品' },
+      { th:'商檢字號', td:'R31312' },
+    ],
+    specDetail: '型號：NP-HDF18\n顏色：銀色(XT)\n容量：10人份\n尺寸：27.5x39.5x23.5(cm)\n重量：5.0kg\n產地：日本\n電壓：110V\n商品驗證識別號碼: R31312',
+  },
+
+
+  // ── 商品 7：PANASONIC 24L燒烤微波爐 ──────────────────────
+  {
+    id: 7,
+    brand:      'PANASONIC',
+    title1:     '24L燒烤微波爐',
+    title2:     '白',
+    model:      'NN-GT35NW',
+    breadcrumb: 'PANASONIC 24L燒烤微波爐',
+    priceSale:  '5,490',
+    priceOrig:  '',
+    imgFolder:  '7',
+    imgFiles:   [
+      '1.avif',
+      '2.webp',
+      '3.png"',
+    ],
+    points: [
+      '燒烤．微波',
+      '微波火力5段',
+      '自動料理14道',
+      '自動解凍',
+      '爐內燈',
+      '兒童安全鎖',
+    ],
+    chips: [
+      { val:'微波+燒烤', key:'同步料理的好處' },
+      { val:'微波高火900W快速加熱', key:'900W大火力出餐更快速' },
+      { val:'解凍食材更簡單', key:'省時又便利' },
+    ],
+    featCards: [
+      { icon:'', title:'內外兼具 體貼你的使用習慣' },
+      { icon:'', title:'爐內燈 食材清晰可見，隨時掌握料理狀況。' },
+      { icon:'', title:'玻璃大轉盤 轉盤直徑28.8公分，可容納約12吋餐盤，空間靈活運用。' },
+      { icon:'', title:'白色液晶螢幕顯示 白光液晶顯示，機能可視化，使用更便利。' },
+      { icon:'', title:'兒童安全鎖 啟動保護機制，幼兒誤觸不會啟動機能，安全又放心。' },
+      { icon:'', title:'全平面外觀設計 時尚美觀，方便清潔。' },
+    ],
+    featH4: '微波爐 特色一覽',
+    featSpecs: [
+      '14項自動食譜',
+      '自動解凍&精準控制火力與時間',
+      '全新霧面質感門板&白色LED設計',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'PANASONIC 24L燒烤微波爐', link:true },
+      { th:'類型', td:'燒烤微波爐' },
+      { th:'適用於', td:'廚房' },
+    ],
+    specDetail: '尺寸和重量\n高\n280mm\n寬\n472mm\n深\n351mm\n重量\n13kg\n*顯示重量和尺寸為約略值。',
+  },
+
+
+  // ── 商品 8：飛利浦 1+1雙研磨美式咖啡機 ──────────────────────
+  {
+    id: 8,
+    brand:      '飛利浦',
+    title1:     '1+1雙研磨美式咖啡機',
+    title2:     '黑',
+    model:      'HD7900/50',
+    breadcrumb: '1+1雙研磨美式咖啡機',
+    priceSale:  '8,990',
+    priceOrig:  '',
+    imgFolder:  '8',
+    imgFiles:   [
+      '1.jpg',
+      '2.jpg',
+      '3.jpg',
+      '4.jpg',
+      '5.jpg',
+      '6.jpg',
+    ],
+    points: [
+      '沖煮職人般香醇美式',
+      '享受咖啡不必等',
+      '即萃即走，隨心所欲',
+      '1+1可拆式雙豆槽 創作專屬風味',
+      '香氣環繞設計咖啡壺',
+      '1.25L可拆式水箱 獨享/分享不受限',
+    ],
+    chips: [
+
+    ],
+    featCards: [
+      { icon:'', title:'S.D.智流控制器 一鍵精準調控粉水比' },
+      { icon:'', title:'首創「即萃模式」即萃即走不設限，內建雙豆槽輕鬆享受MIX風味' },
+      { icon:'', title:'業界唯一「雙豆槽 x 3段研磨」：自在輕享Mix美式風味，3段研磨讓您探索咖啡不同濃淡和風味。' },
+      { icon:'', title:'精準調控粉水比例，輕鬆沖煮職人般香醇美式。' },
+      { icon:'', title:'香氣環繞設計使咖啡香氣不斷循環，智慧對流注水口，讓咖啡均勻流入壺中。' },
+      { icon:'', title:'直覺式LED面板設計，調整參數直覺好操作，一鍵即享不必等。' },
+    ],
+    featH4: '咖啡機 特色一覽',
+    featSpecs: [
+      '1.25L可拆式大容量水箱，獨家或分享暢飲不受限，可滿足1~10人份。',
+      '預約定時X延長保溫：24小時預約功能、保溫最長可達300分鐘，隨時暢享溫度的好咖啡。',
+      '可拆式雙豆槽，方便清潔不混味；可持續性濾網，可水洗後重覆使用，沖煮最佳咖啡風味 。',
+      '濾網、漏斗、咖啡壺配件可進洗碗機，清潔不費力。',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'飛利浦 HD7900/50 1+1雙研磨美式咖啡機', link:true },
+      { th:'類型', td:'咖啡機' },
+      { th:'適用於', td:'廚房、辦公室' },
+      { th:'商檢字號', td:'R3D904' },
+    ],
+    specDetail: '咖啡壺材質：玻璃\n       豆槽：可拆式雙豆槽\n       電量：750W\n       水箱容量：1.25 公升\n       煮沸時間：10 分\n       咖啡溫度：85度\n       適用 : 咖啡豆、咖啡粉\n       電壓：110 V\n       電線長度：85 公分\n       商品檢驗字號: R3D904',
+  },
+
+]; // ← PRODUCTS 陣列結束
+
+
+// ════════════════════════════════════════════════════════
+//  以下為頁面邏輯，不需修改
+// ════════════════════════════════════════════════════════
+
+let current = 0, timer = null;
+let IMG_FOLDER = '', IMG_FILES = [];
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderProduct(p) {
+  // 頁面標題
+  document.getElementById('pageTitle').textContent = `${p.brand} ${p.title1}`;
+
+  // Navbar 選中
+  const sel = document.getElementById('navSelect');
+  sel.value = `product.html?id=${p.id}`;
+
+  // 麵包屑
+  document.getElementById('breadcrumb').textContent = p.breadcrumb;
+
+  // 品牌 / 標題 / 型號
+  document.getElementById('brandTag').textContent = p.brand;
+  const titleEl = document.getElementById('productTitle');
+  titleEl.textContent = '';
+  titleEl.appendChild(document.createTextNode(p.title1));
+  if (p.title2) { titleEl.appendChild(document.createElement('br')); titleEl.appendChild(document.createTextNode(p.title2)); }
+  document.getElementById('modelNo').textContent = p.model;
+
+  // 價格
+  const psEl = document.getElementById('priceSale');
+  psEl.innerHTML = '<sup>$</sup>' + esc(p.priceSale);
+  const poEl = document.getElementById('priceOrig');
+  if (p.priceOrig) { poEl.textContent = '$' + p.priceOrig; poEl.style.display = ''; }
+  else { poEl.style.display = 'none'; }
+
+  // 重點清單
+  const ul = document.getElementById('pointsList');
+  ul.innerHTML = p.points.map(pt => `<li>${esc(pt)}</li>`).join('');
+
+  // 快速規格 chips
+  const cw = document.getElementById('chipsWrap');
+  cw.innerHTML = p.chips.map(c => `<div class="spec-chip"><div class="val">${esc(c.val)}</div><div class="key">${esc(c.key)}</div></div>`).join('');
+  cw.style.display = p.chips.length ? '' : 'none';
+
+  // 特色卡片
+  document.getElementById('featGrid').innerHTML = p.featCards.map(fc =>
+    `<div class="feature-card"><div class="feature-icon">${fc.icon}</div><div class="feature-title">${esc(fc.title)}</div></div>`
+  ).join('');
+
+  // 規格一覽
+  document.getElementById('featH4').textContent = p.featH4;
+  document.getElementById('featSpecsGrid').innerHTML = p.featSpecs.map(s =>
+    `<div class="fs-row"><span class="fs-icon">▸</span><span class="fs-text">${esc(s)}</span></div>`
+  ).join('');
+
+  // 商品規格表
+  const tbody = document.getElementById('specTableBody');
+  tbody.innerHTML = p.specRows.map(r => {
+    const tdContent = r.link
+      ? `<a href="#">${esc(r.td)}</a>`
+      : esc(r.td);
+    return `<tr><th>${esc(r.th)}</th><td>${tdContent}</td></tr>`;
+  }).join('') + `<tr><th>商品規格</th><td class="multiline">${esc(p.specDetail)}</td></tr>`;
+
+  // 圖片 carousel
+  IMG_FOLDER = `img/${p.imgFolder}/`;
+  IMG_FILES  = p.imgFiles || [];
+  buildCarousel();
+}
+
+// ── Carousel ──
+function buildCarousel() {
+  const carousel = document.getElementById('mainCarousel');
+  const dw = document.getElementById('dotsWrap');
+  const ts = document.getElementById('thumbStrip');
+  [...carousel.querySelectorAll('.slide')].forEach(s => s.remove());
+  dw.innerHTML = ''; ts.innerHTML = ''; current = 0; clearInterval(timer);
+
+  if (!IMG_FILES.length) {
+    const s = document.createElement('div');
+    s.className = 'slide active';
+    s.innerHTML = `<div class="slide-placeholder">📷<br>請將圖片放入<br>img/${IMG_FOLDER.replace('img/','').replace('/','')}/</div>`;
+    carousel.insertBefore(s, carousel.querySelector('.arrow-prev')); return;
+  }
+  IMG_FILES.forEach((file, i) => {
+    const s = document.createElement('div');
+    s.className = 'slide' + (i===0?' active':'');
+    s.innerHTML = `<img src="${IMG_FOLDER}${file}" alt="商品圖${i+1}" loading="lazy">`;
+    carousel.insertBefore(s, carousel.querySelector('.arrow-prev'));
+    const d = document.createElement('button'); d.className='dot'+(i===0?' active':'');
+    d.onclick = () => goTo(i); dw.appendChild(d);
+    const t = document.createElement('div'); t.className='thumb'+(i===0?' active':'');
+    t.innerHTML = `<img src="${IMG_FOLDER}${file}" alt="縮圖${i+1}">`;
+    t.onclick = () => goTo(i); ts.appendChild(t);
+  });
+  if (IMG_FILES.length > 1) timer = setInterval(() => goTo(current+1), 1500);
+}
+function goTo(idx) {
+  const carousel=document.getElementById('mainCarousel');
+  const sl=[...carousel.querySelectorAll('.slide')], d=[...document.getElementById('dotsWrap').querySelectorAll('.dot')], t=[...document.getElementById('thumbStrip').querySelectorAll('.thumb')];
+  if (!sl.length) return;
+  [sl,d,t].forEach(a=>a[current]?.classList.remove('active'));
+  current=(idx+sl.length)%sl.length;
+  [sl,d,t].forEach(a=>a[current]?.classList.add('active'));
+}
+function changeSlide(dir) { clearInterval(timer); goTo(current+dir); if(IMG_FILES.length>1) timer=setInterval(()=>goTo(current+1),1500); }
+document.getElementById('mainCarousel').addEventListener('mouseenter',()=>clearInterval(timer));
+document.getElementById('mainCarousel').addEventListener('mouseleave',()=>{ if(IMG_FILES.length>1) timer=setInterval(()=>goTo(current+1),1500); });
+
+// ── Tab ──
+function switchTab(idx, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+idx).classList.add('active');
+}
+
+// ── 啟動：讀 URL ?id= ──
+(function() {
+  const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 1;
+  const p = PRODUCTS.find(x => x.id === id) || PRODUCTS[0];
+  renderProduct(p);
+})();
+</script>
+</body>
+</html>
