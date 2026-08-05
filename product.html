@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="pageTitle">商品詳細規格</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./img/favicon-180.png">
+<link rel="shortcut icon" href="./img/favicon.ico">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; }
@@ -106,6 +110,9 @@
       <option value="product.html?id=6">⑥ 象印日製10人份IH豪熱沸騰微電腦電子鍋</option>
           <option value="product.html?id=7">⑦ PANASONIC 24L燒烤微波爐</option>
       <option value="product.html?id=8">⑧ 飛利浦 1+1雙研磨美式咖啡機</option>
+      <option value="product.html?id=9">⑨ PANASONIC 32L全平面機械式電烤箱</option>
+      <option value="product.html?id=10">⑩ 飛利浦 飛利浦Sonicare舒適清潔音波電動牙刷</option>
+      <option value="product.html?id=11">(11) electrolux 伊萊克斯 500 輕量無線吸塵器</option>
 </select>
   </div>
 </nav>
@@ -330,7 +337,7 @@ const PRODUCTS = [
       { th:'適用於',   td:'居家空間' },
       { th:'配件',     td:'拖布(無遙控器)' },
     ],
-    specDetail: '型號：NP-HDF18\n顏色：石墨黑\n容量：集塵盒容量 (L)0.4\n尺寸：產品尺寸 (寬x高x深mm)\n342 x 94.5 x 342\n充電時間:5H\n水箱:280ml\nHEPA 濾網Yes\n光學雷射感測器Yes\n最長運行時間（分鐘 / 電池）（正常模式）140min\n重量：3.1kg\n電壓：110V',
+    specDetail: '型號：R5-PROBL\n顏色：石墨黑\n容量：集塵盒容量 (L)0.4\n尺寸：產品尺寸 (寬x高x深mm)\n342 x 94.5 x 342\n充電時間:5H\n水箱:280ml\nHEPA 濾網Yes\n光學雷射感測器Yes\n最長運行時間（分鐘 / 電池）（正常模式）140min\n重量：3.1kg\n電壓：110V',
   },
 
   // ── 商品 4：三星 Soundbar HW-B650F ───────────────────
@@ -380,8 +387,8 @@ const PRODUCTS = [
       '透過 Soundbar 分析聲音訊號，依每個播放場景自動優化聲音表現。即便是細節聲音，也能透過分析強化影像中的音量，讓你不錯失任何關鍵片段。',
     ],
     specRows: [
-      { th:'品牌名稱', td:'LG', link:true },
-      { th:'類型',     td:'掃地機器人' },
+      { th:'品牌名稱', td:'三星 SAMSUNG', link:true },
+      { th:'類型',     td:'Soundbar' },
       { th:'適用於',   td:'居家空間' },
       { th:'配件',     td:'重低音喇叭' },
     ],
@@ -511,7 +518,7 @@ const PRODUCTS = [
     imgFiles:   [
       '1.avif',
       '2.webp',
-      '3.png"',
+      '3.png',
     ],
     points: [
       '燒烤．微波',
@@ -601,6 +608,168 @@ const PRODUCTS = [
       { th:'商檢字號', td:'R3D904' },
     ],
     specDetail: '咖啡壺材質：玻璃\n       豆槽：可拆式雙豆槽\n       電量：750W\n       水箱容量：1.25 公升\n       煮沸時間：10 分\n       咖啡溫度：85度\n       適用 : 咖啡豆、咖啡粉\n       電壓：110 V\n       電線長度：85 公分\n       商品檢驗字號: R3D904',
+  },
+
+
+  // ── 商品 9：PANASONIC 32L全平面機械式電烤箱 ──────────────────────
+  {
+    id: 9,
+    brand:      'PANASONIC',
+    title1:     '32L全平面機械式電烤箱送矽膠手套組',
+    title2:     '黑',
+    model:      'F3200',
+    breadcrumb: '32L全平面機械式電烤箱送矽膠手套組',
+    priceSale:  '4990',
+    priceOrig:  '',
+    imgFolder:  '9',
+    imgFiles:   [
+      '1.avif',
+      '2.png',
+      '3.png',
+    ],
+    points: [
+      '送矽膠手套組',
+      '容量：32L',
+      '雙液脹式溫控器',
+      '上/下火獨立控溫',
+      '70℃~230℃溫度控制',
+      '360°自動旋轉燒烤',
+      '3D熱風對流',
+    ],
+    chips: [
+      { val:'70~230℃溫度設定', key:'自由選擇溫度，美味多變化' },
+      { val:'6種功能模式', key:'滿足各種烹調需求' },
+      { val:'安全好清理', key:'爐內空間大' },
+    ],
+    featCards: [
+      { icon:'', title:'上下火雙重溫控' },
+      { icon:'', title:'雙液脹式溫控器 穩定控溫，美味輕鬆到位' },
+      { icon:'', title:'可依自己需求調整烘烤時間' },
+      { icon:'', title:'爐內平面式設計 無露出加熱管，爐內全平面設計，清潔不費力。' },
+      { icon:'', title:'開門安全結構設計' },
+      { icon:'', title:'爐內耐高溫照明 食材清晰可見，隨時掌握料理狀況。' },
+    ],
+    featH4: '',
+    featSpecs: [],
+    specRows: [
+      { th:'品牌名稱', td:'PANASONIC', link:true },
+      { th:'類型', td:'廚具' },
+      { th:'適用於', td:'廚房' },
+    ],
+    specDetail: '尺寸和重量\n高\n345mm\n寬\n515mm\n深\n380mm\n重量\n10.2kg\n*顯示重量和尺寸為含把手之深度約略值\n系列\n雙液脹式溫控電烤箱\n\n型號\nNB-F3200\n\n容積\n32L\n\n爐心溫度\n設定值：70℃至230℃（誤差溫度±30℃）\n設定條件：需設定上下管同時加熱且設定的溫度需相同\n\n自動溫度調節器\n上下管\n液脹式溫控器\n\n發酵\n固定式溫控器\n\n功能切換（約）\n上下管\n1500W\n\n上管\n720W\n\n下管\n780W\n\n定時器\n120分鐘/連續\n\n淨重（約）\n10.2kg\n\n電源線長度（約）\n0.9m',
+  },
+
+
+  // ── 商品 10：飛利浦 飛利浦Sonicare舒適清潔音波電動牙刷 ──────────────────────
+  {
+    id: 10,
+    brand:      '飛利浦',
+    title1:     '飛利浦Sonicare舒適清潔音波電動牙刷',
+    title2:     '白',
+    model:      '(HX5070/02)',
+    breadcrumb: '飛利浦Sonicare舒適清潔音波電動牙刷',
+    priceSale:  '3490',
+    priceOrig:  '',
+    imgFolder:  '10',
+    imgFiles:   [
+      '1.png',
+      '2.jpg',
+      '3.jpg',
+      '4.jpg',
+      '5.jpg',
+      '6.jpg',
+      '7.jpg',
+    ],
+    points: [
+      '送刷頭4入組*2 型號:HX6053/93()六入',
+      '3種潔牙模式(清潔/深度清潔/敏感)',
+      '0.08秒壓力感測保護牙齦',
+      '通過IPX7全機防水測試',
+      '音波震動牙刷機身*1',
+      '31,000次音波震動技術，更潔淨的潔牙效果',
+    ],
+    chips: [
+      { val:'5種潔牙模式', key:'清潔/深度清潔/敏感' },
+      { val:'3秒震動漸強', key:'幫助適應震幅' },
+      { val:'新手友善', key:'貝氏刷牙輕鬆掌握' },
+    ],
+    featCards: [
+
+    ],
+    featH4: '電動牙刷 特色一覽',
+    featSpecs: [
+      '與手動牙刷相比有效清除3倍牙菌斑',
+      '5種潔牙模式(清潔/深度清潔/敏感)',
+      '3秒震動漸強，幫助適應震幅、預防牙膏飛濺',
+      '5種模式X1個強度：新手／清潔／深度清潔／清新／敏感',
+      '全口4區2分鐘智慧計時，確保全口清潔',
+      '3秒震動漸強，幫助適應震幅、預防牙膏飛濺',
+      '60天電量續航，全新升級馬達，有效利用',
+      '新手友善，貝氏刷牙輕鬆掌握！',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'飛利浦Sonicare舒適清潔音波電動牙刷', link:true },
+      { th:'類型', td:'電動牙刷' },
+      { th:'適用於', td:'廁所' },
+    ],
+    specDetail: '音波震動牙刷機身*1\nC2 牙菌斑清除型刷頭 1個\n充電座*1 (110-220V國際電壓)\n充電式鋰電池 (充滿電能用2周以上)\n彩盒尺寸：8.6cm X 6.3cm X 20 CM\n產品重量：250g\n全球2年保固',
+  },
+
+
+  // ── 商品 11：electrolux 伊萊克斯 500 輕量無線吸塵器 ──────────────────────
+  {
+    id: 11,
+    brand:      'electrolux 伊萊克斯',
+    title1:     '500 輕量無線吸塵器',
+    title2:     '幻羽灰',
+    model:      'EFP52212DG',
+    breadcrumb: '伊萊克斯 500系列 無線吸塵器',
+    priceSale:  '7,990',
+    priceOrig:  '',
+    imgFolder:  '11',
+    imgFiles:   [
+      '1.avif',
+      '2.avif',
+      '3.avif',
+      '4.avif',
+      '5.avif',
+      '6.avif',
+    ],
+    points: [
+      'LED強淨三效吸頭 99%高效集塵、抗纏繞',
+      '強力驅動電動吸頭，為各式地板材質提供高效清潔表現',
+      '輕巧好控，地面到高處皆可靈活清潔',
+      '一鍵倒塵不髒手，省時又省力',
+      '可拆卸替換式鋰電池，長效續航高達60分鐘',
+      '精巧充電收納座，一站易取即用',
+    ],
+    chips: [
+
+    ],
+    featCards: [
+      { icon:'', title:'LED強淨三效吸頭 99%高效集塵、抗纏繞' },
+      { icon:'', title:'強勁耐用 無刷直流變頻馬達' },
+      { icon:'', title:'輕巧好控，地面到高處皆可靈活清潔' },
+      { icon:'', title:'一鍵倒塵不髒手' },
+      { icon:'', title:'可拆卸替換式鋰電池，長效續航高達60分鐘' },
+      { icon:'', title:'精巧充電收納座' },
+    ],
+    featH4: '無線吸塵器 特色一覽',
+    featSpecs: [
+      '由無刷直流變頻馬達驅動的強淨三效吸頭， 在地毯、硬地板上皆能展現99%卓越集塵率。',
+      '前置LED照明，清楚照亮死角隱藏灰塵，提升清潔效率。',
+      '抗毛髮纏繞設計，吸頭內側齒梳結構大幅降低吸頭卡毛堵塞問題，穩定維持吸力。',
+      '主機手感重量僅1.26 kg*，約等於兩瓶礦泉水，握感舒適、操作輕鬆。 隨時一鍵切換可拆卸手持主機，零費力清潔廚房檯面、高處層架等細節處。',
+      '直覺式一鍵清空設計，按下集塵盒開啟鈕，即可將灰塵直接倒入垃圾桶。清潔流程更流暢，也能減少接觸灰塵。',
+      '可替換式的鋰電池，充飽電力時手持主機可連續使用長達60分鐘、接上地板電動吸頭可使用50分鐘*。從容清潔全家各處，不受電力限制中斷。',
+      '集充電與收納於一體，僅約A4尺寸不佔空間，讓主機與配件井然有序，隨拿即用。',
+    ],
+    specRows: [
+      { th:'品牌名稱', td:'electrolux 伊萊克斯', link:true },
+      { th:'類型', td:'吸塵器' },
+      { th:'適用於', td:'居家空間' },
+    ],
+    specDetail: '基本資訊\n類型: 無線吸塵器\n有線/無線: 無線\n集塵方式: 集塵盒\n電壓 (V): 18.5\n集塵袋/盒容量 (L): 0.3\n電池容量 (mAH): 1850\n盒內配件\n盒內配件: 充電座, 縫隙吸頭, 強淨三效吸頭\n產品尺寸\n機體寬度: 225 mm\n機體深度: 230 mm\n機體高度: 1074 mm\n產品淨重 (kg): 1.9\n包裝尺寸\n包裝寬度: 186 mm\n包裝深度: 290 mm\n包裝高度: 715 mm\n產品毛重 (kg): 4.8\n設計\n操作介面: 按鍵與顯示幕\n主要材質: 塑膠',
   },
 
 ]; // ← PRODUCTS 陣列結束
