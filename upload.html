@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品整合產生器 → product.html</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #f0f2f5; color: #222; min-height: 100vh; }
+
+  .gen-header {
+    background: #1e2d40; color: #fff; padding: 0 32px;
+    height: 60px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  .gen-header h1 { font-size: 17px; font-weight: 800; }
+  .gen-header p  { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
+  .btn-output {
+    background: #06C755; color: #fff; border: none; border-radius: 8px;
+    padding: 11px 26px; font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background .2s, transform .1s; white-space: nowrap;
+  }
+  .btn-output:hover  { background: #05a848; transform: translateY(-1px); }
+  .btn-output:active { transform: translateY(0); }
+  .btn-output:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+
+  /* ── Step 0: 選檔 ── */
+  .step0 {
+    max-width: 640px; margin: 48px auto; background: #fff; border-radius: 12px;
+    padding: 36px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  }
+  .step0 h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .step0 p  { font-size: 13px; color: #666; margin-bottom: 28px; line-height: 1.7; }
+  .file-drop {
+    border: 2px dashed #2c6ea6; border-radius: 10px; padding: 40px 24px;
+    cursor: pointer; transition: background .2s;
+  }
+  .file-drop:hover { background: #eef3f8; }
+  .file-drop svg  { width: 48px; height: 48px; color: #2c6ea6; margin-bottom: 12px; }
+  .file-drop span { display: block; font-size: 14px; font-weight: 600; color: #2c6ea6; }
+  .file-drop small{ display: block; font-size: 12px; color: #aaa; margin-top: 4px; }
+  #fileInput { display: none; }
+  .file-ok { font-size: 13px; color: #06C755; font-weight: 700; margin-top: 14px; }
+  .file-info { font-size: 12px; color: #888; margin-top: 4px; }
+
+  /* ── Form body ── */
+  .gen-body { max-width: 900px; margin: 0 auto; padding: 24px 16px 80px; display: none; }
+  .card { background: #fff; border-radius: 10px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .card-title { font-size: 13px; font-weight: 800; color: #1e2d40; border-left: 3px solid #2c6ea6; padding-left: 10px; margin-bottom: 18px; }
+  .field-grid { display: grid; gap: 14px; }
+  .field-grid.col2 { grid-template-columns: 1fr 1fr; }
+  .field-grid.col3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: .4px; }
+  .field input, .field textarea, .field select {
+    padding: 9px 12px; border: 1.5px solid #ddd; border-radius: 6px;
+    font-size: 14px; font-family: inherit; color: #222; transition: border-color .2s; outline: none;
+  }
+  .field input:focus, .field textarea:focus { border-color: #2c6ea6; }
+  .field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  .field .hint { font-size: 11px; color: #aaa; }
+  .sub-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; margin: 18px 0 10px; letter-spacing: .4px; }
+  .divider { border: none; border-top: 1px solid #f0f0f0; margin: 18px 0; }
+  .feat-row { display: grid; grid-template-columns: 70px 1fr; gap: 8px; align-items: center; }
+
+  /* ── 現有商品清單 ── */
+  .existing-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .existing-tag {
+    background: #eef3f8; color: #2c6ea6; border: 1px solid #b3cde0;
+    border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600;
+  }
+  .new-id-badge {
+    background: #1e2d40; color: #ffd700; border-radius: 20px;
+    padding: 4px 14px; font-size: 12px; font-weight: 700;
+  }
+
+  /* ── Toast ── */
+  #toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #1e2d40; color: #fff; padding: 12px 28px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .3s, transform .3s;
+    z-index: 9999; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 640px) {
+    .field-grid.col2, .field-grid.col3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gen-header">
+  <div>
+    <h1>商品整合產生器 → product.html</h1>
+    <p>填完後按「整合輸出」，下載已加入新商品的 product.html 直接覆蓋即可</p>
+  </div>
+  <button class="btn-output" id="btnOutput" onclick="integrate()" disabled>整合輸出 ⬇</button>
+</div>
+
+<!-- ── Step 0：選擇 product.html ── -->
+<div class="step0" id="step0">
+  <h2>第一步：選擇你的 product.html</h2>
+  <p>點擊下方區域，選取本機的 <code>product.html</code><br>系統會自動讀取現有商品清單，並讓你填入新商品資料</p>
+  <div class="file-drop" onclick="document.getElementById('fileInput').click()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+    <span>點擊選取 product.html</span>
+    <small>或拖曳檔案至此</small>
+  </div>
+  <input type="file" id="fileInput" accept=".html" onchange="loadFile(this)">
+  <div id="fileOk" style="display:none">
+    <div class="file-ok">✅ 已載入：<span id="fileName"></span></div>
+    <div class="file-info" id="fileInfo"></div>
+  </div>
+</div>
+
+<!-- ── 表單 ── -->
+<div class="gen-body" id="genBody">
+
+  <!-- 現有商品 + 新 ID -->
+  <div class="card">
+    <div class="card-title">現有商品 & 新商品編號</div>
+    <div class="existing-list" id="existingList"></div>
+    <div style="margin-top:14px; display:flex; align-items:center; gap:10px;">
+      <span style="font-size:13px; color:#666;">新商品 ID：</span>
+      <span class="new-id-badge" id="newIdBadge">id = ?</span>
+      <input id="sec_num" type="number" min="1" style="width:80px; padding:6px 10px; border:1.5px solid #ddd; border-radius:6px; font-size:14px;" oninput="updateIdBadge()">
+    </div>
+  </div>
+
+  <!-- ① 基本資訊 -->
+  <div class="card">
+    <div class="card-title">① 基本資訊</div>
+    <div class="field-grid col2">
+      <div class="field"><label>品牌名稱（右欄藍色標籤）</label><input id="brand" type="text" placeholder="例：Electrolux 伊萊克斯"></div>
+      <div class="field"><label>麵包屑文字</label><input id="breadcrumb" type="text" placeholder="例：Electrolux 300系列 無線吸塵器"></div>
+      <div class="field"><label>商品標題第一行</label><input id="title1" type="text" placeholder="例：300系列 無線吸塵器"></div>
+      <div class="field"><label>商品標題第二行（顏色/型號，可留空）</label><input id="title2" type="text" placeholder="例：鎗鐵灰 EFP31312"></div>
+      <div class="field"><label>型號 / BSMI</label><input id="model" type="text" placeholder="例：型號：EFP31312 ／ BSMI：R33428"></div>
+      <div class="field"><!-- spacer --></div>
+      <div class="field"><label>建議售價（不含 $）</label><input id="price_sale" type="text" placeholder="例：7,990"></div>
+      <div class="field"><label>原價（留空 = 不顯示）</label><input id="price_orig" type="text" placeholder="留空 = 不顯示"></div>
+    </div>
+    <hr class="divider">
+    <div class="field-grid col2">
+      <div class="field">
+        <label>圖片資料夾編號（img/X/ 的 X）</label>
+        <input id="img_folder" type="text" placeholder="例：7">
+        <span class="hint">建議與商品 ID 相同</span>
+      </div>
+      <div class="field">
+        <label>圖片檔名（逗號分隔）</label>
+        <input id="img_files" type="text" placeholder="例：1.jpg,2.webp,3.avif">
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 右欄重點 -->
+  <div class="card">
+    <div class="card-title">② 右欄重點說明（✓ 清單，最多 6 條）</div>
+    <div class="field-grid">
+      <div class="field"><label>重點 1</label><input class="pt" type="text"></div>
+      <div class="field"><label>重點 2</label><input class="pt" type="text"></div>
+      <div class="field"><label>重點 3</label><input class="pt" type="text"></div>
+      <div class="field"><label>重點 4</label><input class="pt" type="text"></div>
+      <div class="field"><label>重點 5</label><input class="pt" type="text"></div>
+      <div class="field"><label>重點 6</label><input class="pt" type="text"></div>
+    </div>
+  </div>
+
+  <!-- ③ 快速規格 -->
+  <div class="card">
+    <div class="card-title">③ 快速規格（右欄 3 格）</div>
+    <div class="field-grid col3">
+      <div class="field">
+        <label>規格 1 數值</label><input id="c1v" type="text" placeholder="例：40 min">
+        <label style="margin-top:8px;">規格 1 標籤</label><input id="c1k" type="text" placeholder="例：低速續航">
+      </div>
+      <div class="field">
+        <label>規格 2 數值</label><input id="c2v" type="text" placeholder="例：0.5 L">
+        <label style="margin-top:8px;">規格 2 標籤</label><input id="c2k" type="text" placeholder="例：集塵容量">
+      </div>
+      <div class="field">
+        <label>規格 3 數值</label><input id="c3v" type="text" placeholder="例：2.42 kg">
+        <label style="margin-top:8px;">規格 3 標籤</label><input id="c3k" type="text" placeholder="例：整機重量">
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 商品特色 Tab -->
+  <div class="card">
+    <div class="card-title">④ 商品特色 Tab</div>
+    <div class="sub-title">6 張特色卡片（Emoji + 標題）</div>
+    <div class="field-grid">
+      <div class="feat-row"><input class="fi" type="text" placeholder="emoji"><input class="ft" type="text" placeholder="特色標題"></div>
+      <div class="feat-row"><input class="fi" type="text" placeholder="emoji"><input class="ft" type="text" placeholder="特色標題"></div>
+      <div class="feat-row"><input class="fi" type="text" placeholder="emoji"><input class="ft" type="text" placeholder="特色標題"></div>
+      <div class="feat-row"><input class="fi" type="text" placeholder="emoji"><input class="ft" type="text" placeholder="特色標題"></div>
+      <div class="feat-row"><input class="fi" type="text" placeholder="emoji"><input class="ft" type="text" placeholder="特色標題"></div>
+      <div class="feat-row"><input class="fi" type="text" placeholder="emoji"><input class="ft" type="text" placeholder="特色標題"></div>
+    </div>
+    <hr class="divider">
+    <div class="field-grid col2">
+      <div class="field" style="grid-column:1/-1;"><label>規格一覽區塊標題</label><input id="feat_h4" type="text" placeholder="例：無線吸塵器 規格一覽"></div>
+    </div>
+    <div class="field" style="margin-top:10px;">
+      <label>規格條列（每行一條，最多 10 條）</label>
+      <textarea id="feat_specs" rows="8" placeholder="集塵方式：集塵盒（0.5 L）&#10;電壓：21.6 V&#10;最大運轉音量：≤ 80 dB"></textarea>
+    </div>
+  </div>
+
+  <!-- ⑤ 商品規格 Tab -->
+  <div class="card">
+    <div class="card-title">⑤ 商品規格 Tab（MOMO 格式）</div>
+    <div class="field-grid">
+      <div class="field"><label>品牌名稱</label><input id="s_brand" type="text"></div>
+      <div class="field"><label>類型</label><input id="s_type" type="text"></div>
+      <div class="field"><label>適用於</label><input id="s_for" type="text"></div>
+      <div class="field"><label>保固資訊</label><input id="s_warranty" type="text"></div>
+      <div class="field"><label>配件</label><input id="s_parts" type="text"></div>
+      <div class="field"><label>商檢字號</label><input id="s_bsmi" type="text"></div>
+      <div class="field">
+        <label>商品規格（多行，以 · 開頭，照 MOMO 格式貼入）</label>
+        <textarea id="s_detail" rows="8" placeholder="·型號:EFP31312&#10;·重量:2.42kg&#10;·集塵盒容量:約0.5L"></textarea>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end gen-body -->
+
+<div id="toast">✅ 已整合並下載！</div>
+
+<script>
+// ── 狀態 ──
+let originalHtml = '';
+let existingIds  = [];
+const SYMBOLS = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'];
+
+// ── 讀取 product.html ──
+function loadFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    originalHtml = e.target.result;
+
+    // 抓現有 ID 清單
+    const ids = [...originalHtml.matchAll(/\bid:\s*(\d+)/g)].map(m => parseInt(m[1]));
+    existingIds = [...new Set(ids)].sort((a,b)=>a-b);
+    const nextId = existingIds.length ? Math.max(...existingIds) + 1 : 1;
+
+    // 顯示現有商品
+    const listEl = document.getElementById('existingList');
+    listEl.innerHTML = existingIds.map(id => {
+      // 找名稱
+      const m = originalHtml.match(new RegExp(`id:\\s*${id},[\\s\\S]*?brand:\\s*'([^']+)'`));
+      const name = m ? m[1] : `商品 ${id}`;
+      return `<div class="existing-tag">${SYMBOLS[id-1]||'●'} id:${id} ${name}</div>`;
+    }).join('');
+
+    // 設定預設新 ID
+    document.getElementById('sec_num').value = nextId;
+    document.getElementById('img_folder').value = nextId;
+    updateIdBadge();
+
+    // 同步品牌到規格品牌
+    document.getElementById('brand').oninput = function() {
+      if (!document.getElementById('s_brand').value) document.getElementById('s_brand').value = this.value;
+    };
+
+    // 顯示表單
+    document.getElementById('fileOk').style.display = '';
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileInfo').textContent = `已找到 ${existingIds.length} 個商品（id: ${existingIds.join(', ')}）`;
+    document.getElementById('step0').style.display = 'none';
+    document.getElementById('genBody').style.display = 'block';
+    document.getElementById('btnOutput').disabled = false;
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+// 拖曳支援
+document.querySelector('.file-drop').addEventListener('dragover', e => { e.preventDefault(); e.currentTarget.style.background='#eef3f8'; });
+document.querySelector('.file-drop').addEventListener('dragleave', e => { e.currentTarget.style.background=''; });
+document.querySelector('.file-drop').addEventListener('drop', e => {
+  e.preventDefault(); e.currentTarget.style.background='';
+  const dt = e.dataTransfer;
+  if (dt.files[0]) { document.getElementById('fileInput').files = dt.files; loadFile(document.getElementById('fileInput')); }
+});
+
+function updateIdBadge() {
+  const n = parseInt(document.getElementById('sec_num').value) || '?';
+  document.getElementById('newIdBadge').textContent = `id = ${n}`;
+}
+
+// ── 工具：JS 字串轉義（單引號格式）──
+function jsStr(s) {
+  return "'" + String(s)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r\n/g, '\\n')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\n') + "'";
+}
+function jsArr(arr) {
+  if (!arr.length) return '[]';
+  return '[\n' + arr.map(s => '      ' + jsStr(s) + ',').join('\n') + '\n    ]';
+}
+function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+// ── 建立 JS 物件字串 ──
+function buildProductJs(id) {
+  const brand   = v('brand');
+  const title1  = v('title1');
+  const title2  = v('title2');
+  const model   = v('model');
+  const bc      = v('breadcrumb') || `${brand} ${title1}`;
+  const pSale   = v('price_sale');
+  const pOrig   = v('price_orig');
+  const imgF    = v('img_folder') || String(id);
+  const imgFiles= v('img_files').split(',').map(s=>s.trim()).filter(Boolean);
+
+  const points  = [...document.querySelectorAll('.pt')].map(el=>el.value.trim()).filter(Boolean);
+  const c1v=v('c1v'), c1k=v('c1k'), c2v=v('c2v'), c2k=v('c2k'), c3v=v('c3v'), c3k=v('c3k');
+  const chips = [[c1v,c1k],[c2v,c2k],[c3v,c3k]].filter(([v])=>v);
+
+  const fi = [...document.querySelectorAll('.fi')].map(el=>el.value.trim());
+  const ft = [...document.querySelectorAll('.ft')].map(el=>el.value.trim());
+  const featCards = fi.map((icon,i)=>({icon,title:ft[i]})).filter(c=>c.title);
+
+  const featH4    = v('feat_h4');
+  const featSpecs = v('feat_specs').split('\n').map(s=>s.trim()).filter(Boolean);
+
+  const sBrand   = v('s_brand') || brand;
+  const sType    = v('s_type');
+  const sFor     = v('s_for');
+  const sWarranty= v('s_warranty');
+  const sParts   = v('s_parts');
+  const sBsmi    = v('s_bsmi');
+  const sDetail  = v('s_detail');
+
+  // specRows
+  const specRowDefs = [
+    { th:'品牌名稱', val:sBrand,    link:true },
+    { th:'類型',     val:sType,     link:false },
+    { th:'適用於',   val:sFor,      link:false },
+    { th:'保固資訊', val:sWarranty, link:false },
+    { th:'配件',     val:sParts,    link:false },
+    { th:'商檢字號', val:sBsmi,     link:false },
+  ].filter(r => r.val);
+
+  const specRowsJs = specRowDefs.map(r =>
+    r.link
+      ? `      { th:${jsStr(r.th)}, td:${jsStr(r.val)}, link:true },`
+      : `      { th:${jsStr(r.th)}, td:${jsStr(r.val)} },`
+  ).join('\n');
+
+  const chipsJs = chips.map(([val,key]) =>
+    `      { val:${jsStr(val)}, key:${jsStr(key)} },`
+  ).join('\n');
+
+  const featCardsJs = featCards.map(c =>
+    `      { icon:${jsStr(c.icon)}, title:${jsStr(c.title)} },`
+  ).join('\n');
+
+  const sym = SYMBOLS[id-1] || `(${id})`;
+
+  return `
+  // ── 商品 ${id}：${brand} ${title1} ──────────────────────
+  {
+    id: ${id},
+    brand:      ${jsStr(brand)},
+    title1:     ${jsStr(title1)},
+    title2:     ${jsStr(title2)},
+    model:      ${jsStr(model)},
+    breadcrumb: ${jsStr(bc)},
+    priceSale:  ${jsStr(pSale)},
+    priceOrig:  ${jsStr(pOrig)},
+    imgFolder:  ${jsStr(imgF)},
+    imgFiles:   ${jsArr(imgFiles)},
+    points: ${jsArr(points)},
+    chips: [
+${chipsJs}
+    ],
+    featCards: [
+${featCardsJs}
+    ],
+    featH4: ${jsStr(featH4)},
+    featSpecs: ${jsArr(featSpecs)},
+    specRows: [
+${specRowsJs}
+    ],
+    specDetail: ${jsStr(sDetail)},
+  },`;
+}
+
+// ── 主要整合函式 ──
+function integrate() {
+  if (!originalHtml) return alert('請先載入 product.html');
+
+  const id = parseInt(v('sec_num'));
+  if (!id || id < 1) return alert('請填入有效的商品編號');
+  if (!v('brand'))   return alert('請填入品牌名稱');
+  if (!v('title1'))  return alert('請填入商品標題');
+
+  let html = originalHtml;
+
+  // ── 1. 在 PRODUCTS 陣列末尾插入新商品 ──
+  const PRODUCTS_END = ']; // ← PRODUCTS 陣列結束';
+  if (!html.includes(PRODUCTS_END)) {
+    return alert('找不到 PRODUCTS 陣列結束標記\n請確認選取的是正確的 product.html');
+  }
+  const productJs = buildProductJs(id);
+  html = html.replace(PRODUCTS_END, productJs + '\n\n' + PRODUCTS_END);
+
+  // ── 2. 在 navbar select 加入新 option ──
+  const sym     = SYMBOLS[id-1] || `(${id})`;
+  const brand   = v('brand');
+  const title1  = v('title1');
+  const navLabel = `${sym} ${brand} ${title1}`;
+  const newOption = `      <option value="product.html?id=${id}">${navLabel}</option>\n`;
+
+  // 找 navSelect 的 </select>
+  const navSelectEnd = '</select>\n  </div>\n</nav>';
+  if (html.includes(navSelectEnd)) {
+    html = html.replace(navSelectEnd, newOption + navSelectEnd);
+  } else {
+    // fallback: 在 id="navSelect" 最近的 </select> 前插
+    html = html.replace(/(id="navSelect"[\s\S]*?)<\/select>/, '$1' + newOption + '</select>');
+  }
+
+  // ── 3. 下載 ──
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'product.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+
+  // Toast
+  const toast = document.getElementById('toast');
+  toast.textContent = `✅ 已整合商品 id:${id} 並下載 product.html！覆蓋舊檔即完成。`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
