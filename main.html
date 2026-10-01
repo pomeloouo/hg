@@ -1027,13 +1027,12 @@
     const brands = [];            // { name, side, firstRow, models: [{ name, rows: [{cap, price, promo}] }] }
     const state = SIDES.map(() => ({ brand: null, model: null }));
 
+    let dateDone = false;
     rows.forEach((cols, rowIdx) => {
       const line = cols.join(' ');
       if (!line.trim()) return;
-      if (!date) {
-        const m = line.match(/\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}/);
-        if (m && !cols.slice(1).some(c => /G】|\d{4,}/.test(c))) { date = m[0]; return; }
-      }
+      // 第一個非空白列 = 試算表第 1 列，報價日期直接取第一欄 (A1) 的內容，不論格式
+      if (!dateDone) { dateDone = true; date = clean(cols[0]); return; }
       if (/品\s*牌/.test(line) && /型\s*號/.test(line)) return;   // 表頭
 
       SIDES.forEach((def, i) => {
