@@ -465,7 +465,8 @@
 
     /* ── 中古機清單（深色區塊） ── */
     .used-sheet {
-      margin: -32px 0 64px;
+      width: 100%;
+      margin: 0 0 40px;
       border: 1px solid rgba(255,255,255,.1);
       border-radius: var(--r-lg);
       background: var(--night-2);
@@ -495,6 +496,24 @@
     .us-table td { padding: 12px 24px 12px 0; color: var(--on-night); border-bottom: 1px solid rgba(255,255,255,.06); }
     .us-table th:first-child, .us-table td:first-child { padding-left: 24px; }
     .us-table td:first-child { font-weight: 700; }
+    .us-table td.long { white-space: normal; min-width: 220px; max-width: 360px; color: var(--on-night-2); font-size: 13px; line-height: 1.55; }
+    /* 家電報價表：放在淺色區塊，改用頁面配色變數，深色模式自動跟著變 */
+    .home-sheet { margin: 0; background: var(--canvas); border-color: var(--hairline); }
+    .home-sheet .us-head { border-bottom-color: var(--hairline); }
+    .home-sheet .us-meta { color: var(--ink-2); }
+    .home-sheet .us-meta b, .home-sheet .us-table td { color: var(--ink); }
+    .home-sheet .us-table th { color: var(--ink-3); border-bottom-color: var(--hairline); }
+    .home-sheet .us-table td { border-bottom-color: var(--hairline); }
+    .home-sheet .us-table td.long { color: var(--ink-2); }
+    .home-sheet .us-table tbody tr:hover td { background: var(--parchment); }
+    .home-sheet .us-search { background: var(--parchment); border-color: var(--hairline); color: var(--ink); }
+    .home-sheet .us-search::placeholder { color: var(--ink-3); }
+    .home-sheet .us-search:focus { border-color: var(--accent-ink); }
+    .home-sheet .us-toggle { color: var(--accent-ink); border-top-color: var(--hairline); }
+    .home-sheet .us-toggle:hover { background: var(--parchment); }
+    .home-sheet .us-msg, .home-sheet .us-empty { color: var(--ink-3); }
+    .home-sheet[hidden] { display: none; }
+    .us-table td.num.ask { font-weight: 500; font-size: 13px; opacity: .6; }
     .us-table .num { text-align: right; font-variant-numeric: tabular-nums; }
     .us-table td.num { font-weight: 800; }
     .us-table tbody tr:last-child td { border-bottom: 0; }
@@ -508,7 +527,7 @@
     }
     .us-toggle:hover { background: rgba(255,255,255,.04); }
     @media (max-width: 767px) {
-      .used-sheet { margin: -16px 0 40px; }
+      .used-sheet { margin: 0 0 32px; }
       .us-head { padding: 14px 16px; }
       .us-search { width: 100%; }
       .us-table th:first-child, .us-table td:first-child { padding-left: 16px; }
@@ -576,7 +595,7 @@
     /* 家電主視覺 */
     .home-feature { display: flex; flex-direction: column; align-items: center; gap: 32px; }
     .home-visual {
-      display: block; width: 100%;
+      display: block; width: 100%; max-width: 760px;   /* 圖片大小：改這個數字 */
       border-radius: var(--r-lg); overflow: hidden;
       background: var(--canvas);
       box-shadow: 0 24px 60px rgba(20, 30, 40, .10);
@@ -809,11 +828,12 @@
 <div class="used-points reveal">
 
         <div><i class="ph ph-seal-check"></i><b>貨源乾淨</b><span>來源可追溯，不收來路不明的機器。</span></div>
-               <div><i class="ph ph-hand-coins"></i><b>價格透明</b><span>依機況與市價報價。</span></div>
-        
-        <!-- 中古機清單：資料來自 Google 試算表（網址設定在 SHEET_URLS.usedPhone） -->
-        <div class="used-sheet" id="usedSheet"><div class="us-msg">中古機清單載入中…</div></div>
-</div>
+        <div><i class="ph ph-hand-coins"></i><b>價格透明</b><span>依機況與市價報價。</span></div>
+      </div>
+
+      <!-- 中古機清單：資料來自 Google 試算表（網址設定在 SHEET_URLS.usedPhone）
+           注意：要放在 used-points 外面，放進去會變成格子裡的一格而被擠到右側 -->
+      <div class="used-sheet" id="usedSheet"><div class="us-msg">中古機清單載入中…</div></div>
              <a class="btn btn-accent" href="tel:0985333888">詢問各區內勤業務</a>
       </div>
     </div>
@@ -833,6 +853,8 @@
           <img src="https://hochukingshopping.github.io/hg/img/family1.png" alt="禾鉅家電大集合" loading="lazy" decoding="async"
                onerror="this.closest('.home-visual').classList.add('is-missing')">
         </a>
+        <!-- 家電報價表：資料來自 Google 試算表（網址設定在 SHEET_URLS.appliance） -->
+        <div class="used-sheet home-sheet" id="homeSheet"><div class="us-msg">家電報價載入中…</div></div>
         <a class="btn btn-ink btn-xl home-all" href="https://hochukingshopping.github.io/hg/index.html">
           看全部家電 <i class="ph-bold ph-arrow-right"></i>
         </a>
@@ -946,7 +968,9 @@
      ══════════════════════════════════════════════════════════════ */
   const SHEET_URLS = {
     newPhone:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTZ-eyYXj7ugRKnEY0_a0XigyUf6Mtn44nvu6p19qcJxA_rBmwYeCVAqqMUvJek-Q/pub?output=csv',
-    usedPhone: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgYLobnsGF8DqZSa0Sb0oDtGP3jyvnbW7CL_lxAIImdJoeDpxTqlaghv8zlBjdrA/pub?output=csv'
+    usedPhone: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgYLobnsGF8DqZSa0Sb0oDtGP3jyvnbW7CL_lxAIImdJoeDpxTqlaghv8zlBjdrA/pub?output=csv',
+    // 家電報價：目前這個網址的內容是中古機資料（暫代展示用），之後換成家電分頁的發布網址即可
+    appliance: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQl2U0C56wcQXQ15UJdb5_6Hx2_sy6ufuHyQbRJDCgyIhxSEMcyMWKvHOS2AoB5IQ/pub?output=csv'
   };
 
   /* 讀取 Google 試算表發布的 CSV；逾時或失敗回傳 null */
@@ -1134,46 +1158,53 @@
   /* ── 中古機清單：通用表格 ──
      不寫死欄位：第一個「有兩格以上內容」的列當表頭，其餘照試算表原樣顯示。
      試算表增減欄位、調整順序，網頁都會自動跟著變。 */
-  (async function initUsed() {
-    const box = document.getElementById('usedSheet');
-    if (!box) return;
-    const rows = await fetchSheet(SHEET_URLS.usedPhone);
-    if (!rows) {
-      box.innerHTML = '<div class="us-msg">中古機清單暫時無法載入，請來電或 LINE 詢問現有機型。</div>';
-      return;
-    }
+  /* ── 通用試算表表格（中古機、家電共用） ──
+     不寫死欄位：照試算表原樣顯示，增減欄位或調整順序網頁都會自動跟著變。
+     - 第一列若只有一個日期 → 顯示為更新日期
+     - 若第一列看起來就是資料（含價格或數字），視為「沒有表頭」，直接全部當資料顯示
+     - 價格欄：表頭含「價／售／元」，或該欄大多數是 $1,234 / 1234 這類數字 → 靠右、加粗
+     - 長文字欄（任一格超過 24 字，例如備註）→ 允許換行 */
+  function renderSheetTable(box, rows, opt) {
     const clean = v => (v || '').replace(/\s+/g, ' ').trim();
     let data = rows.map(r => r.map(clean)).filter(r => r.some(Boolean));
-    // 移除整欄都空白的欄位
+    if (!data.length) { box.innerHTML = `<div class="us-msg">${opt.emptyText}</div>`; return; }
     const width = Math.max(...data.map(r => r.length));
     const keep = [...Array(width).keys()].filter(c => data.some(r => r[c]));
     data = data.map(r => keep.map(c => r[c] || ''));
-    // 第一列若只有一個日期，當作更新日期
     let date = '';
-    if (data.length && data[0].filter(Boolean).length === 1 && /\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}/.test(data[0].join(''))) {
+    if (data[0].filter(Boolean).length === 1 && /\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}/.test(data[0].join(''))) {
       date = data.shift().join('').trim();
     }
+    const isMoney = v => /^\$?\s?\d{1,3}(,\d{3})+$|^\$?\s?\d{3,}$/.test(v);
     const hIdx = data.findIndex(r => r.filter(Boolean).length >= 2);
-    if (hIdx < 0) { box.innerHTML = '<div class="us-msg">目前沒有中古機資料。</div>'; return; }
-    const head = data[hIdx];
-    const body = data.slice(hIdx + 1);
-    const priceCols = head.map((h, i) => /價|售|元|\$/.test(h) ? i : -1).filter(i => i >= 0);
+    if (hIdx < 0) { box.innerHTML = `<div class="us-msg">${opt.emptyText}</div>`; return; }
+    const looksLikeData = data[hIdx].some(v => isMoney(v) || /\d+%/.test(v));
+    const head = looksLikeData ? null : data[hIdx];
+    const body = looksLikeData ? data.slice(hIdx) : data.slice(hIdx + 1);
+    const cols = data[hIdx].length;
+    const priceCols = [...Array(cols).keys()].filter(i =>
+      (head && /價|售|元|\$/.test(head[i])) ||
+      body.filter(r => isMoney(r[i])).length >= Math.max(1, body.filter(r => r[i]).length * 0.6));
+    const longCols = [...Array(cols).keys()].filter(i => body.some(r => (r[i] || '').length > 24));
     const fmt = (v, i) => priceCols.includes(i) && /^\d{4,}$/.test(v) ? Number(v).toLocaleString('en-US') : v;
+    const cls = i => [priceCols.includes(i) ? 'num' : '', longCols.includes(i) ? 'long' : ''].join(' ').trim();
 
-    const LIMIT = 15;   // 預設顯示筆數，其餘按「顯示全部」展開
+    const LIMIT = opt.limit || 15;   // 預設顯示筆數，其餘按「顯示全部」展開
     box.innerHTML = `
       <div class="us-head">
         <div class="us-meta">${date ? `更新日期 <b>${escHTML(date)}</b>` : '雲端即時資料'}<span>共 <b>${body.length}</b> 筆</span></div>
-        <input class="us-search" type="search" placeholder="搜尋機型、容量" aria-label="搜尋中古機">
+        <input class="us-search" type="search" placeholder="${opt.placeholder}" aria-label="${opt.placeholder}">
       </div>
       <div class="us-scroll">
         <table class="us-table">
-          <thead><tr>${head.map((h, i) => `<th class="${priceCols.includes(i) ? 'num' : ''}">${escHTML(h)}</th>`).join('')}</tr></thead>
-          <tbody>${body.map((r, n) => `<tr data-q="${escHTML(r.join(' ').toLowerCase())}"${n >= LIMIT ? ' class="more" hidden' : ''}>${
-            r.map((v, i) => `<td class="${priceCols.includes(i) ? 'num' : ''}">${escHTML(fmt(v, i))}</td>`).join('')}</tr>`).join('')}</tbody>
+          ${head ? `<thead><tr>${head.map((h, i) => `<th class="${cls(i)}">${escHTML(h)}</th>`).join('')}</tr></thead>` : ''}
+          <tbody>${body.map((r, n) => `<tr data-q="${escHTML(r.join(' ').toLowerCase())}"${n >= LIMIT ? ' hidden' : ''}>${
+            r.map((v, i) => priceCols.includes(i) && !v
+              ? `<td class="${cls(i)} ask">來電洽詢</td>`
+              : `<td class="${cls(i)}">${escHTML(fmt(v, i))}</td>`).join('')}</tr>`).join('')}</tbody>
         </table>
       </div>
-      <div class="us-empty" hidden>找不到符合的機型，請來電或 LINE 詢問。</div>
+      <div class="us-empty" hidden>找不到符合的項目，請來電或 LINE 詢問。</div>
       ${body.length > LIMIT ? `<button type="button" class="us-toggle">顯示全部 ${body.length} 筆</button>` : ''}`;
 
     const search = box.querySelector('.us-search');
@@ -1184,8 +1215,7 @@
       const q = search.value.trim().toLowerCase();
       let shown = 0;
       trs.forEach((tr, n) => {
-        const match = !q || tr.dataset.q.includes(q);
-        tr.hidden = !match || (!q && !expanded && n >= LIMIT);
+        tr.hidden = !(!q || tr.dataset.q.includes(q)) || (!q && !expanded && n >= LIMIT);
         if (!tr.hidden) shown++;
       });
       box.querySelector('.us-empty').hidden = shown > 0;
@@ -1197,7 +1227,22 @@
       toggle.textContent = expanded ? '收合' : `顯示全部 ${body.length} 筆`;
       apply();
     });
-  })();
+  }
+
+  /* 依 SHEET_URLS 載入各區表格；網址留空的區塊不會顯示 */
+  [
+    { id: 'usedSheet', url: SHEET_URLS.usedPhone, placeholder: '搜尋機型、容量',
+      failText: '中古機清單暫時無法載入，請來電或 LINE 詢問現有機型。', emptyText: '目前沒有中古機資料。' },
+    { id: 'homeSheet', url: SHEET_URLS.appliance, placeholder: '搜尋家電品牌、型號',
+      failText: '家電報價暫時無法載入，請來電或 LINE 詢問。', emptyText: '目前沒有家電報價資料。' }
+  ].forEach(async cfg => {
+    const box = document.getElementById(cfg.id);
+    if (!box) return;
+    if (!cfg.url) { box.hidden = true; return; }
+    const rows = await fetchSheet(cfg.url);
+    if (!rows) { box.innerHTML = `<div class="us-msg">${cfg.failText}</div>`; return; }
+    renderSheetTable(box, rows, cfg);
+  });
 
   /* ── FAQ ── */
   document.querySelectorAll('.faq-q').forEach(q => {
