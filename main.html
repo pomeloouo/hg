@@ -335,6 +335,29 @@
       min-height: 360px;
     }
     .carrier-panel h3 { font-size: 26px; font-weight: 700; margin: 0 0 24px; }
+
+    /* 公版佣金圖片 */
+    .carrier { grid-template-columns: minmax(220px, .75fr) 2.25fr; }   /* 圖片區加寬，字比較大 */
+    .carrier-img {
+      position: relative; display: block;
+      border-radius: 12px; overflow: hidden;
+      background: #fff; cursor: zoom-in;
+    }
+    .carrier-img img { display: block; width: 100%; height: auto; }
+    .carrier-img-hint {
+      position: absolute; right: 10px; bottom: 10px;
+      padding: 6px 12px; border-radius: 999px;
+      background: rgba(11,11,12,.72); color: #fff;
+      font-size: 12px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px;
+      opacity: 0; transition: opacity .25s var(--ease);
+    }
+    .carrier-img:hover .carrier-img-hint { opacity: 1; }
+    .carrier-img-error { display: none; padding: 32px 16px; text-align: center; color: #333; font-size: 14px; }
+    .carrier-img.is-missing { cursor: pointer; }
+    .carrier-img.is-missing img, .carrier-img.is-missing .carrier-img-hint { display: none; }
+    .carrier-img.is-missing .carrier-img-error { display: block; }
+    @media (hover: none) { .carrier-img-hint { opacity: 1; } }   /* 手機沒有滑鼠，提示常駐 */
     .svc-list { display: grid; gap: 20px; margin: 0 0 32px; padding: 0; list-style: none; }
     .svc-list li { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
     .svc-list i { font-size: 24px; color: var(--accent); margin-top: 2px; }
@@ -765,7 +788,7 @@
         <div class="step"><i class="ph ph-identification-card"></i><b>促案選擇更新</b><span>請洽內勤業務</span></div>
         <div class="step"><i class="ph ph-list-checks"></i><b>禾鉅系統網址</b><div><a class="btn btn-accent" href="http://shoppingking.com.tw/Telecom/Account/Login?ReturnUrl=%2FTelecom%2F">點我去禾鉅系統</a></div>
 </div>
-        <div class="step"><i class="ph ph-storefront"></i><b>中華紙本件</b><span>續約作業僅周一至周五，假日無續約作業請書填寫完成後整份拍照或掃描給我確認版本是否正確或簽名是否漏簽，周一至周六當天下午4點前通知派車收件黑貓會於當日過去收件。</span></div>
+        <div class="step"><i class="ph ph-storefront"></i><b>中華紙本件</b><span>續約作業僅周一至周五，假日無續約作業。請書填寫完成後整份拍照或掃描給我們確認版本是否正確或簽名是否漏簽，周一至周六當天下午4點前通知派車收件黑貓會於當日過去收件。</span></div>
     </div>
   </section>
 
@@ -939,9 +962,45 @@
       ]
     }
   };
+  /* ══════════════════════════════════════════════════════════════
+     公版佣金圖片（後期維護只改這裡）
+     直接貼 Google 雲端硬碟的「共用連結」即可，程式會自動轉成可顯示的圖片網址。
+     圖片在雲端換新內容（同一個檔案、用「管理版本」上傳新版）時，連結不用改。
+     注意：雲端檔案的共用權限必須是「知道連結的任何人」。
+     ══════════════════════════════════════════════════════════════ */
+  const CARRIER_IMAGES = {
+    fet: 'https://drive.google.com/file/d/1fhxncK1QiaeGkgDG6U-Td0W765nKEuFG/view?usp=sharing',
+    cht: 'https://drive.google.com/file/d/1XuGYMsvXLvm06iWTQb6Ks7yIUXdZLn07/view?usp=sharing'
+  };
+  const driveId = url => (url.match(/\/d\/([\w-]{20,})/) || url.match(/[?&]id=([\w-]{20,})/) || [])[1];
+  function carrierImage(key) {
+    const link = CARRIER_IMAGES[key];
+    const id = link && driveId(link);
+    if (!id) return '';
+    // sz=w2400：要求 2400px 寬的版本，高解析螢幕也清晰；讀不到時改用第二種網址
+    const src = `https://drive.google.com/thumbnail?id=${id}&sz=w2400`;
+    const alt = `https://lh3.googleusercontent.com/d/${id}=w2400`;
+    return `
+      <a class="carrier-img" href="${link}" target="_blank" rel="noopener" title="點擊開啟原圖">
+        <img src="${src}" alt="${CARRIERS[key].title} 公版佣金表" loading="lazy" decoding="async"
+             onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='${alt}';}else{this.closest('.carrier-img').classList.add('is-missing');}">
+        <span class="carrier-img-hint"><i class="ph ph-magnifying-glass-plus"></i> 點擊放大</span>
+        <span class="carrier-img-error">圖片暫時無法顯示，點此開啟雲端原圖</span>
+      </a>`;
+  }
+
   const panel = document.getElementById('carrierPanel');
   function renderCarrier(key) {
     const c = CARRIERS[key];
+    const img = carrierImage(key);
+    if (img) {
+      panel.innerHTML = `
+        <div class="panel-fade">
+          <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
+          ${img}
+        </div>`;
+      return;
+    }
     panel.innerHTML = `
       <div class="panel-fade">
         <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
