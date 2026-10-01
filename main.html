@@ -949,16 +949,16 @@
     fet: {
       title: '遠傳',
       items: [
-        ['ph-sim-card', '新辦', '123456'],
-        ['ph-arrows-left-right', '攜碼', '保留原號碼轉入遠傳，舊約狀態請先確認。']
+        ['ph-sim-card', '新辦', ''],
+        ['ph-arrows-left-right', '攜碼', '']
       ]
     },
     cht: {
       title: '中華電信',
       items: [
-        ['ph-sim-card', '新辦', '123'],
-        ['ph-arrows-left-right', '攜碼', '123'],
-        ['ph-arrows-clockwise', '續約', '123']
+        ['ph-sim-card', '新辦', ''],
+        ['ph-arrows-left-right', '攜碼', ''],
+        ['ph-arrows-clockwise', '續約', '']
       ]
     }
   };
@@ -995,19 +995,22 @@
     if (img) {
       panel.innerHTML = `
         <div class="panel-fade">
-          <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
+          <h3>${c.title} 公版</h3>
+        <h3>加碼速另洽內勤業務</h3>
+
           ${img}
         </div>`;
       return;
     }
     panel.innerHTML = `
       <div class="panel-fade">
-        <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
+        <h3>${c.title} </h3>
+ <h3>公版與加碼請洽詢內勤業務</h3>
         <ul class="svc-list">
           ${c.items.map(([ic, t, d]) => `<li><i class="ph ${ic}"></i><div><b>${t}</b><span>${d}</span></div></li>`).join('')}
         </ul>
       </div>
-      <div><a class="btn btn-accent" href="tel:0985333888">12569</a></div>`;
+      `;
   }
   document.querySelectorAll('.carrier-btn').forEach(btn => {
     btn.addEventListener('click', () => {
