@@ -398,6 +398,26 @@
     }
     .quote-search::placeholder { color: var(--ink-3); }
     .quote-search:focus { border-color: var(--accent-ink); box-shadow: 0 0 0 3px rgba(0,200,200,.18); }
+    /* 搜尋欄青色呼吸光（新機、中古機、家電三個搜尋欄共用）：
+       吸引注意可以搜尋；點進去輸入時停止閃爍，改成穩定亮框 */
+    .quote-search, .us-search {
+      border-color: rgba(0,200,200,.55);
+      animation: searchGlow 2.4s ease-in-out infinite;
+    }
+    .quote-search:focus, .quote-search:not(:placeholder-shown),
+    .us-search:focus, .us-search:not(:placeholder-shown) {
+      animation: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,200,200,.22), 0 0 18px rgba(0,200,200,.35);
+    }
+    @keyframes searchGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,200,200,0), 0 0 4px rgba(0,200,200,.15); border-color: rgba(0,200,200,.45); }
+      50%      { box-shadow: 0 0 0 3px rgba(0,200,200,.18), 0 0 20px rgba(0,200,200,.55); border-color: rgba(0,200,200,1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .quote-search, .us-search { animation: none; box-shadow: 0 0 10px rgba(0,200,200,.35); }   /* 減少動態：改成靜態微光 */
+    }
+    @media print { .quote-search, .us-search { animation: none; } }
     .quote-print {
       height: 40px; padding: 0 16px; border-radius: var(--r-pill);
       border: 1px solid var(--hairline); background: var(--canvas); color: var(--ink);
@@ -948,16 +968,16 @@
     fet: {
       title: '遠傳',
       items: [
-        ['ph-sim-card', '新辦', '123456'],
-        ['ph-arrows-left-right', '攜碼', '保留原號碼轉入遠傳，舊約狀態請先確認。']
+        ['ph-sim-card', '新辦', ''],
+        ['ph-arrows-left-right', '攜碼', '']
       ]
     },
     cht: {
       title: '中華電信',
       items: [
-        ['ph-sim-card', '新辦', '123'],
-        ['ph-arrows-left-right', '攜碼', '123'],
-        ['ph-arrows-clockwise', '續約', '123']
+        ['ph-sim-card', '新辦', ''],
+        ['ph-arrows-left-right', '攜碼', ''],
+        ['ph-arrows-clockwise', '續約', '']
       ]
     }
   };
@@ -969,8 +989,7 @@
      ══════════════════════════════════════════════════════════════ */
   const CARRIER_IMAGES = {
     fet: 'https://drive.google.com/file/d/1fhxncK1QiaeGkgDG6U-Td0W765nKEuFG/view?usp=sharing',
-    cht: 'https://drive.google.com/file/d/1XuGYMsvXLvm06iWTQb6Ks7yIUXdZLn07/view?usp=sharing'
-  };
+      };
   const driveId = url => (url.match(/\/d\/([\w-]{20,})/) || url.match(/[?&]id=([\w-]{20,})/) || [])[1];
   function carrierImage(key) {
     const link = CARRIER_IMAGES[key];
@@ -995,19 +1014,21 @@
     if (img) {
       panel.innerHTML = `
         <div class="panel-fade">
-          <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
+           <h3>${c.title} 公版</h3>
+        <h3>加碼速另洽內勤業務</h3>
           ${img}
         </div>`;
       return;
     }
     panel.innerHTML = `
       <div class="panel-fade">
-        <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
+         <h3>${c.title} </h3>
+ <h3>公版與加碼請洽詢內勤業務</h3>
         <ul class="svc-list">
           ${c.items.map(([ic, t, d]) => `<li><i class="ph ${ic}"></i><div><b>${t}</b><span>${d}</span></div></li>`).join('')}
         </ul>
       </div>
-      <div><a class="btn btn-accent" href="${CONTACT_URL}" data-contact><i class="ph-bold ph-chat-circle-dots"></i>LINE洽詢各區內勤業務</a></div>`;
+      `;
   }
   document.querySelectorAll('.carrier-btn').forEach(btn => {
     btn.addEventListener('click', () => {
