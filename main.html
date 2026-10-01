@@ -970,8 +970,7 @@
      ══════════════════════════════════════════════════════════════ */
   const CARRIER_IMAGES = {
     fet: 'https://drive.google.com/file/d/1fhxncK1QiaeGkgDG6U-Td0W765nKEuFG/view?usp=sharing',
-    cht: 'https://drive.google.com/file/d/1XuGYMsvXLvm06iWTQb6Ks7yIUXdZLn07/view?usp=sharing'
-  };
+      };
   const driveId = url => (url.match(/\/d\/([\w-]{20,})/) || url.match(/[?&]id=([\w-]{20,})/) || [])[1];
   function carrierImage(key) {
     const link = CARRIER_IMAGES[key];
