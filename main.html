@@ -27,17 +27,17 @@
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
   <style>
     /* ============ Design tokens ============
-       風格參考：Apple 產品頁（深色主視覺 + 淺色內容 + 單一強調色）
+       全站統一深黑色：頁面底色一律 --night，卡片／面板用 --canvas 微微浮起
        強調色沿用禾鉅品牌青色 */
     :root {
-      --accent: #00c8c8;          /* 深色底上使用 */
-      --accent-ink: #007f86;      /* 淺色底上的文字/連結，確保對比 ≥ 4.5:1 */
-      --ink: #1d1d1f;
-      --ink-2: #515154;
-      --ink-3: #86868b;
-      --canvas: #ffffff;
-      --parchment: #f5f5f7;
-      --hairline: #e3e3e6;
+      --accent: #00c8c8;
+      --accent-ink: #3ad6d6;      /* 深底上的文字連結 */
+      --ink: #f5f5f7;             /* 主文字 */
+      --ink-2: #c7c7cc;           /* 次文字 */
+      --ink-3: #8e8e93;           /* 輔助文字 */
+      --canvas: #161618;          /* 卡片、面板、輸入框 */
+      --parchment: #1e1e21;       /* 面板內的次層底色 */
+      --hairline: #2c2c30;        /* 分隔線 */
       --night: #0b0b0c;
       --night-2: #161618;
       --night-3: #232326;
@@ -50,17 +50,6 @@
       --ease: cubic-bezier(.16, 1, .3, 1);
       --font: system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --ink: #f5f5f7;
-        --ink-2: #c7c7cc;
-        --ink-3: #8e8e93;
-        --canvas: #111113;
-        --parchment: #1a1a1d;
-        --hairline: #2c2c30;
-        --accent-ink: #3ad6d6;
-      }
-    }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); }
@@ -68,7 +57,7 @@
       margin: 0;
       font-family: var(--font);
       color: var(--ink);
-      background: var(--canvas);
+      background: var(--night);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       letter-spacing: 0.01em;
@@ -285,7 +274,9 @@
 
     /* ============ Section base ============ */
     .sec { padding: 112px 0; }
-    .sec-parchment { background: var(--parchment); }
+    .sec-parchment { background: var(--night); }   /* 統一深黑，不再淺灰 */
+    /* 同色區塊之間的分隔線：品牌青色，2px */
+    #phone, #used, #home, #contact { border-top: 2px solid var(--accent); }
     .sec-head { max-width: 640px; margin-bottom: 48px; }
     .sec-head h2 {
       font-size: clamp(1.8rem, 3.4vw, 2.8rem);
@@ -555,9 +546,7 @@
       .us-search { width: 100%; }
       .us-table th:first-child, .us-table td:first-child { padding-left: 16px; }
     }
-    @media (prefers-color-scheme: dark) {
-      .qt .promo { color: #fdba74; background: rgba(251, 146, 60, .14); }
-    }
+    .qt .promo { color: #fdba74; background: rgba(251, 146, 60, .14); }
     @media (max-width: 900px) {
       .quote-body { grid-template-columns: 1fr; }
       .quote-col + .quote-col { border-left: 0; border-top: 1px solid var(--hairline); }
@@ -570,7 +559,12 @@
     /* 列印：只印報價單 */
     @media print {
       header.nav, footer, .to-top, main > section:not(#phone), #phone .sec-head, .quote-tools, .quote-brands { display: none !important; }
+      :root {
+        --ink: #1d1d1f; --ink-2: #515154; --ink-3: #6e6e73;
+        --canvas: #ffffff; --parchment: #f5f5f7; --hairline: #d9d9de; --accent-ink: #007f86;
+      }
       body { background: #fff !important; }
+      .qt .promo { color: #c2410c; background: rgba(234, 88, 12, .1); }
       #phone { padding: 0 !important; background: #fff !important; }
       .reveal { opacity: 1 !important; transform: none !important; }
       .quote { border: 0; }
@@ -721,8 +715,8 @@
       <a class="tab" href="#used" data-tab="used">中古機</a>
       <a class="tab" href="#home" data-tab="home">家電</a>
     </nav>
-    <a class="btn btn-accent btn-sm nav-cta" href="tel:0985333888">
-      <i class="ph-bold ph-phone"></i>LINE洽詢各區內勤業務
+    <a class="btn btn-accent btn-sm nav-cta" href="tel:0985333888" data-contact>
+      <i class="ph-bold ph-chat-circle-dots"></i>LINE洽詢各區內勤業務
     </a>
   </div>
 </header>
@@ -858,7 +852,7 @@
       <!-- 中古機清單：資料來自 Google 試算表（網址設定在 SHEET_URLS.usedPhone）
            注意：要放在 used-points 外面，放進去會變成格子裡的一格而被擠到右側 -->
       <div class="used-sheet" id="usedSheet"><div class="us-msg">中古機清單載入中…</div></div>
-             <a class="btn btn-accent" href="tel:0985333888">詢問各區內勤業務</a>
+             <a class="btn btn-accent" href="tel:0985333888" data-contact><i class="ph-bold ph-chat-circle-dots"></i>LINE洽詢各區內勤業務</a>
       </div>
     </div>
   </section>
@@ -895,7 +889,7 @@
         </div>
         <div class="contact-card">
           <h3>總部資訊</h3>
-          <div class="contact-row"><i class="ph ph-phone"></i><a href="tel:0985333888">LINE聯繫各區內勤業務</a></div>
+          <div class="contact-row"><i class="ph ph-phone"></i><a href="tel:0985333888" data-contact>LINE洽詢各區內勤業務</a></div>
           <div class="contact-row"><i class="ph ph-map-pin"></i><a href="https://maps.google.com/?q=台中市西屯區福星北三街178號" target="_blank" rel="noopener">台中市西屯區福星北三街178號</a></div>
         </div>
       </div>
@@ -945,20 +939,25 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── 門號面板 ── */
+  /* 洽詢按鈕連結：全站所有「LINE洽詢各區內勤業務」按鈕都用這一個網址
+     目前是電話；有 LINE 官方帳號後改成 https://lin.ee/xxxx 這類網址即可 */
+  const CONTACT_URL = 'tel:0985333888';
+  document.querySelectorAll('[data-contact]').forEach(a => { a.href = CONTACT_URL; });
+
   const CARRIERS = {
     fet: {
       title: '遠傳',
       items: [
-        ['ph-sim-card', '新辦', ''],
-        ['ph-arrows-left-right', '攜碼', '']
+        ['ph-sim-card', '新辦', '123456'],
+        ['ph-arrows-left-right', '攜碼', '保留原號碼轉入遠傳，舊約狀態請先確認。']
       ]
     },
     cht: {
       title: '中華電信',
       items: [
-        ['ph-sim-card', '新辦', ''],
-        ['ph-arrows-left-right', '攜碼', ''],
-        ['ph-arrows-clockwise', '續約', '']
+        ['ph-sim-card', '新辦', '123'],
+        ['ph-arrows-left-right', '攜碼', '123'],
+        ['ph-arrows-clockwise', '續約', '123']
       ]
     }
   };
@@ -970,7 +969,8 @@
      ══════════════════════════════════════════════════════════════ */
   const CARRIER_IMAGES = {
     fet: 'https://drive.google.com/file/d/1fhxncK1QiaeGkgDG6U-Td0W765nKEuFG/view?usp=sharing',
-      };
+    cht: 'https://drive.google.com/file/d/1XuGYMsvXLvm06iWTQb6Ks7yIUXdZLn07/view?usp=sharing'
+  };
   const driveId = url => (url.match(/\/d\/([\w-]{20,})/) || url.match(/[?&]id=([\w-]{20,})/) || [])[1];
   function carrierImage(key) {
     const link = CARRIER_IMAGES[key];
@@ -995,22 +995,19 @@
     if (img) {
       panel.innerHTML = `
         <div class="panel-fade">
-          <h3>${c.title} 公版</h3>
-        <h3>加碼速另洽內勤業務</h3>
-
+          <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
           ${img}
         </div>`;
       return;
     }
     panel.innerHTML = `
       <div class="panel-fade">
-        <h3>${c.title} </h3>
- <h3>公版與加碼請洽詢內勤業務</h3>
+        <h3>${c.title} 公版・加碼洽詢內勤業務</h3>
         <ul class="svc-list">
           ${c.items.map(([ic, t, d]) => `<li><i class="ph ${ic}"></i><div><b>${t}</b><span>${d}</span></div></li>`).join('')}
         </ul>
       </div>
-      `;
+      <div><a class="btn btn-accent" href="${CONTACT_URL}" data-contact><i class="ph-bold ph-chat-circle-dots"></i>LINE洽詢各區內勤業務</a></div>`;
   }
   document.querySelectorAll('.carrier-btn').forEach(btn => {
     btn.addEventListener('click', () => {
