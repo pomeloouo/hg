@@ -987,7 +987,8 @@
       <div class="sec-head reveal">
         
         <h2>遠傳、中華電信<br></h2>
-        <p>最新更新日期2026/10/1</p>
+        <!-- 更新日期讀 Google 試算表（SHEET_URLS.simDate）；讀不到時顯示這裡寫的日期 -->
+        <p>最新更新日期 <span id="simDate">2026/10/1</span></p>
       </div>
 
       <div class="carrier reveal">
@@ -1375,6 +1376,8 @@
     appliance: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQl2U0C56wcQXQ15UJdb5_6Hx2_sy6ufuHyQbRJDCgyIhxSEMcyMWKvHOS2AoB5IQ/pub?output=csv',
     // 首頁促銷項目：試算表共用設為「知道連結的任何人＝檢視者」即可讀取，不必另外發布
     // 試算表有多個分頁時，在網址最後加 &sheet=分頁名稱
+    // 門號公版佣金圖的更新日期：試算表 A1 寫「更新日期」，A2 寫日期（例如 2026/10/1）
+    simDate:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vQER5pl-OrWVmZlMV_DuqVEqoN40wlKMJsPidb1EK6YpmTsJYtV-NWOgI1GjGryfHIDrxzKJUfo3One/pub?output=csv',
     // 依序嘗試，前一個讀不到才試下一個；第一個是「發布到網路」的 CSV（最穩），後兩個是備援
     promo: [
       'https://docs.google.com/spreadsheets/d/e/2PACX-1vSuo6fcQrgM_5SjxdrpO0cv7Sc-zsMd0IXGO7VbOwLR7yFfzCo7efGdWRAIjLoq847ArcDhu6Unm0RX/pub?output=csv',
@@ -1582,6 +1585,17 @@
       `<div><b>${escHTML(r[0] || '')}</b><dd><b>${escHTML(r[1])}</b>${escHTML(r[2] || '')}</dd></div>`).join('');
   })();
 
+  /* 門號公版更新日期：取試算表裡第一個「不是表頭」的非空儲存格（優先找日期格式） */
+  (async function initSimDate() {
+    const el = document.getElementById('simDate');
+    if (!el || !SHEET_URLS.simDate) return;
+    const rows = await fetchSheet(SHEET_URLS.simDate);
+    if (!rows) return;
+    const cells = rows.flat().map(v => (v || '').trim()).filter(v => v && !/更新日期|日期/.test(v));
+    const val = cells.find(v => /\d{2,4}[\/\-.年]\d{1,2}/.test(v)) || cells[0];
+    if (val) el.textContent = val;
+  })();
+
   /* 先讀雲端；失敗時用頁面內嵌的備份資料（Tab 分隔） */
   (async function initQuote() {
     const cloud = await fetchSheet(SHEET_URLS.newPhone);
@@ -1611,8 +1625,11 @@
     const keep = [...Array(width).keys()].filter(c => data.some(r => r[c]));
     data = data.map(r => keep.map(c => r[c] || ''));
     let date = '';
-    if (data[0].filter(Boolean).length === 1 && /\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}/.test(data[0].join(''))) {
-      date = data.shift().join('').trim();
+    /* 第一列是更新日期：最多兩格有字（例如「更新日期｜2026/10/1」或只有「2026/10/1」），
+       而且含日期格式 → 抽出日期顯示在表格上方，不當成資料列 */
+    const dateRe = /\d{2,4}\s*[\/\-.年]\s*\d{1,2}(\s*[\/\-.月]\s*\d{1,2}\s*日?)?/;
+    if (data[0].filter(Boolean).length <= 2 && dateRe.test(data[0].join(' '))) {
+      date = data.shift().join(' ').match(dateRe)[0].trim();
     }
     const isMoney = v => /^\$?\s?\d{1,3}(,\d{3})+$|^\$?\s?\d{3,}$/.test(v);
     const hIdx = data.findIndex(r => r.filter(Boolean).length >= 2);
@@ -2079,30 +2096,4 @@ function pose(t) {
   rig.rotation.y = autoYaw + pointer.x * 0.12 + drag.yaw;
   rig.rotation.x = autoPitch + pointer.y * 0.06 + drag.pitch;
   rig.rotation.z = reduceMotion ? 0.04 : 0.04 + Math.sin(t * 0.23) * 0.02;
-  rig.position.set(layout.x, layout.y + (reduceMotion ? 0 : Math.sin(t * 0.6) * 0.18), 0);
-  rig.scale.setScalar(layout.s);
-  rimCyan.position.set(-9 + Math.sin(t * 0.35) * 3, 4, -8);  // 輪廓光緩慢移動，反光沿邊緣流動
-}
-function renderOnce() { pose(clock.getElapsedTime()); renderer.render(scene, camera); }
-
-/* 畫面外或分頁隱藏時暫停，省電省 GPU。
-   減少動態模式下平常不跑迴圈，只在拖曳/回彈期間跑，回彈完成就停。 */
-let running = false, visible = true;
-function loop() {
-  if (!running) return;
-  renderOnce();
-  if (reduceMotion && springSettled()) { running = false; return; }
-  requestAnimationFrame(loop);
-}
-function start() {
-  if (running || !visible || document.hidden) return;
-  if (reduceMotion && springSettled()) { renderOnce(); return; }
-  running = true; requestAnimationFrame(loop);
-}
-function kick() { start(); }
-function stop() { running = false; }
-new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(hero);
-document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-</script>
-</body>
-</html>
+  rig.position.set(layout.x, layout.y + (reduceMotion ? 0 : Math.sin(t * 0.6) * 0.1
