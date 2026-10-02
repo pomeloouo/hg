@@ -2096,4 +2096,30 @@ function pose(t) {
   rig.rotation.y = autoYaw + pointer.x * 0.12 + drag.yaw;
   rig.rotation.x = autoPitch + pointer.y * 0.06 + drag.pitch;
   rig.rotation.z = reduceMotion ? 0.04 : 0.04 + Math.sin(t * 0.23) * 0.02;
-  rig.position.set(layout.x, layout.y + (reduceMotion ? 0 : Math.sin(t * 0.6) * 0.1
+  rig.position.set(layout.x, layout.y + (reduceMotion ? 0 : Math.sin(t * 0.6) * 0.18), 0);
+  rig.scale.setScalar(layout.s);
+  rimCyan.position.set(-9 + Math.sin(t * 0.35) * 3, 4, -8);  // 輪廓光緩慢移動，反光沿邊緣流動
+}
+function renderOnce() { pose(clock.getElapsedTime()); renderer.render(scene, camera); }
+
+/* 畫面外或分頁隱藏時暫停，省電省 GPU。
+   減少動態模式下平常不跑迴圈，只在拖曳/回彈期間跑，回彈完成就停。 */
+let running = false, visible = true;
+function loop() {
+  if (!running) return;
+  renderOnce();
+  if (reduceMotion && springSettled()) { running = false; return; }
+  requestAnimationFrame(loop);
+}
+function start() {
+  if (running || !visible || document.hidden) return;
+  if (reduceMotion && springSettled()) { renderOnce(); return; }
+  running = true; requestAnimationFrame(loop);
+}
+function kick() { start(); }
+function stop() { running = false; }
+new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(hero);
+document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+</script>
+</body>
+</html>
