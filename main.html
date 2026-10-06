@@ -9,13 +9,13 @@
        ══════════════════════════════════════════════════════════════ -->
   <title>禾鉅事業｜台中手機報價・遠傳中華門號・中古機・家電</title>
   <meta name="description" content="禾鉅事業位於台中•盤商 •體系18家電信門市，提供遠傳、中華電信門號公版，iPhone、三星等新機現金報價，以及中古機與家電報價，LINE 洽詢台中各區內勤業務。">
-  <link rel="canonical" href="">
+  <link rel="canonical" href="https://hochukingshopping.github.io/hg/main.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#161618">
   <meta name="format-detection" content="telephone=no">
   <!-- Google Search Console 驗證：search.google.com/search-console 新增資源 →「HTML 標記」→ 把 content 換成驗證碼後取消註解
   
-  --><meta name="google-site-verification" content="" />
+  --><meta name="google-site-verification" content="Cw6PE-wxVkA86xaGdScrgSRZf1zWCj4mCpksDUdNnN0" />
 
   <!-- 社群分享預覽（LINE／Facebook／Messenger 貼連結時顯示的卡片） -->
   <meta property="og:type" content="website">
@@ -56,11 +56,11 @@
       },
       {
         "@type": "WebSite",
-        "@id": "",
-        "url": "",
+        "@id": "https://hochukingshopping.github.io/hg/#website",
+        "url": "https://hochukingshopping.github.io/hg/main.html",
         "name": "禾鉅事業",
         "inLanguage": "zh-TW",
-        "publisher": { "@id": " }
+        "publisher": { "@id": "https://hochukingshopping.github.io/hg/main.html#store" }
       },
       {
         "@type": "FAQPage",
@@ -81,7 +81,7 @@
        留空 = 不載入、不追蹤；本機 file:// 開啟一律不送資料，避免測試灌水
        ══════════════════════════════════════════════════════════════ -->
   <script>
-    window.HG_ANALYTICS = { GA4_ID: '', CLARITY_ID: '' };
+    window.HG_ANALYTICS = { GA4_ID: 'G-V4LKXSCCJ2', CLARITY_ID: '' };
     (function () {
       var cfg = window.HG_ANALYTICS, live = /^https?:$/.test(location.protocol);
       window.dataLayer = window.dataLayer || [];
@@ -310,6 +310,9 @@
     .btn-ghost-dark:hover { background: rgba(255,255,255,.1); color: var(--on-night); }
     .btn-ink { background: var(--ink); color: var(--canvas); }
     .btn-ink:hover { opacity: .88; color: var(--canvas); }
+    /* 青色外框按鈕（次要動作）：與主要的青色實心按鈕同色系 */
+    .btn-outline-accent { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+    .btn-outline-accent:hover { background: rgba(0,200,200,.12); color: var(--accent); }
 
     /* 手機版：上排 logo + 電話，下排四個分頁等寬 */
     @media (max-width: 767px) {
@@ -589,8 +592,24 @@
       opacity: 0; transition: opacity .25s var(--ease);
     }
     .carrier-img:hover .carrier-img-hint { opacity: 1; }
-    .carrier-img-error { display: none; padding: 32px 16px; text-align: center; color: #333; font-size: 14px; }
-    .carrier-img.is-missing { cursor: pointer; }
+    .carrier-img-error {
+      display: none; padding: 40px 20px; text-align: center;
+      color: var(--on-night-2); font-size: 14px; line-height: 1.7;
+    }
+    .carrier-img-error i { display: block; font-size: 28px; color: var(--on-night-2); margin-bottom: 8px; }
+    .carrier-img-error b { display: block; color: var(--on-night); font-size: 15px; }
+    .carrier-img-retry {
+      display: flex; width: max-content; align-items: center; gap: 6px; margin: 14px auto 0;   /* 自成一行置中 */
+      padding: 8px 16px; border-radius: var(--r-pill);
+      border: 1px solid rgba(0,200,200,.6); color: var(--accent); font-weight: 600; font-size: 13px;
+      transition: background .2s var(--ease);
+    }
+    .carrier-img-retry:hover { background: rgba(0,200,200,.12); }
+    /* 讀取失敗：改成深色虛線框，不再出現刺眼的白色方塊 */
+    .carrier-img.is-missing {
+      cursor: pointer; background: rgba(255,255,255,.03);
+      border: 1px dashed rgba(255,255,255,.18);
+    }
     .carrier-img.is-missing img, .carrier-img.is-missing .carrier-img-hint { display: none; }
     .carrier-img.is-missing .carrier-img-error { display: block; }
     @media (hover: none) { .carrier-img-hint { opacity: 1; } }   /* 手機沒有滑鼠，提示常駐 */
@@ -601,12 +620,17 @@
     .svc-list span { color: var(--on-night-2); font-size: 14px; line-height: 1.6; }
     .panel-fade { animation: panelIn .45s var(--ease); }
     @keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    /* 三張等高卡片；卡片內容由上往下排，按鈕固定貼齊卡片底部 */
     .steps {
       display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 0; margin-top: 56px;
-      border-top: 1px solid var(--hairline);
+      gap: 16px; margin-top: 56px; align-items: stretch;
     }
-    .step { padding: 24px 24px 0 0; }
+    .step {
+      display: flex; flex-direction: column;
+      padding: 24px; border-radius: 16px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--hairline);
+    }
+    .step > div { margin-top: auto; padding-top: 16px; }   /* 放按鈕的那一格推到底部 */
     .step b { font-size: 17px; display: block; margin-bottom: 6px; }
     .step span { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
     .step i { font-size: 22px; color: var(--accent-ink); display: block; margin-bottom: 12px; }
@@ -615,8 +639,8 @@
       .carrier-switch { flex-direction: row; }
       .carrier-btn { flex: 1; padding: 18px; }
       .carrier-panel { padding: 28px 24px; min-height: 0; }
-      .steps { grid-template-columns: 1fr; }
-      .step { padding: 20px 0 0; }
+      .steps { grid-template-columns: 1fr; gap: 12px; }
+      .step { padding: 20px; }
     }
 
     /* ============ 手機：新機現金報價單 ============ */
@@ -723,7 +747,14 @@
       font-size: 12px; color: var(--ink-3); line-height: 1.7;
       background: var(--parchment);
     }
-    .quote-error { padding: 24px 32px; color: #b42318; font-size: 14px; }
+    .quote-error {
+      grid-column: 1 / -1;   /* 報價區是左右兩欄，錯誤提示要橫跨整個寬度置中 */
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 48px 24px; text-align: center; color: var(--on-night-2); font-size: 14px; line-height: 1.7;
+    }
+    .quote-error i { font-size: 32px; color: var(--accent); }
+    .quote-error b { color: var(--on-night); font-size: 17px; }
+    .quote-error .btn { margin-top: 8px; }
     /* 收合：預設只露出約一屏，底部淡出；篩選或搜尋時自動展開 */
     .quote.is-collapsed .quote-body {
       max-height: 920px; overflow: hidden;
@@ -893,6 +924,7 @@
     }
     .btn-xl i { transition: transform .3s var(--ease); }
     .btn-xl:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(20, 30, 40, .28); }
+    .btn-xl.btn-outline-accent, .btn-xl.btn-outline-accent:hover { box-shadow: none; }
     .btn-xl:hover i { transform: translateX(4px); }
     @media (max-width: 767px) {
       .home-feature { gap: 24px; }
@@ -1159,7 +1191,7 @@
         </a>
         <!-- 家電報價表：資料來自 Google 試算表（網址設定在 SHEET_URLS.appliance） -->
         <div class="used-sheet home-sheet" id="homeSheet"><div class="us-msg">家電報價載入中…</div></div>
-        <a class="btn btn-ink btn-xl home-all" href="https://hochukingshopping.github.io/hg/index.html">
+        <a class="btn btn-outline-accent btn-xl home-all" href="https://hochukingshopping.github.io/hg/index.html">
           看全部家電 <i class="ph-bold ph-arrow-right"></i>
         </a>
       </div>
@@ -1383,7 +1415,12 @@
         <img src="${src}" alt="${CARRIERS[key].title} 公版佣金表" loading="lazy" decoding="async"
              onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='${alt}';}else{this.closest('.carrier-img').classList.add('is-missing');}">
         <span class="carrier-img-hint"><i class="ph ph-magnifying-glass-plus"></i> 點擊放大</span>
-        <span class="carrier-img-error">圖片暫時無法顯示，點此開啟雲端原圖</span>
+        <span class="carrier-img-error">
+          <i class="ph ph-image-broken"></i>
+          <b>佣金圖暫時無法顯示</b>點整個框可開啟雲端原圖
+          <span class="carrier-img-retry" role="button" tabindex="0"
+                onclick="event.preventDefault();event.stopPropagation();var a=this.closest('.carrier-img'),im=a.querySelector('img');a.classList.remove('is-missing');delete im.dataset.retry;im.src='${src}'+'&t='+Date.now();"><i class="ph-bold ph-arrow-clockwise"></i>重新載入</span>
+        </span>
       </a>`;
   }
 
@@ -1541,7 +1578,15 @@
 
     const total = brands.reduce((n, b) => n + b.models.reduce((m, md) => m + md.rows.length, 0), 0);
     if (!total) {
-      root.querySelector('.quote-body').innerHTML = '<div class="quote-error">報價資料格式無法辨識：請確認試算表欄位順序與原本相同（A~E 左半、G~J 右半）。</div>';
+      // 技術原因只記錄在主控台與 GA4，畫面上顯示給客人看的說法
+      console.warn('[報價單] 資料格式無法辨識：請確認試算表欄位順序與原本相同（A~E 左半、G~J 右半）');
+      window.hgTrack?.('quote_parse_error', { source });
+      root.querySelector('.quote-body').innerHTML = `<div class="quote-error">
+        <i class="ph ph-clock-countdown"></i>
+        <b>報價更新中</b>
+        <span>最新報價整理中，請稍後再重新整理，或直接 LINE 洽詢各區內勤業務。</span>
+        <button type="button" class="btn btn-accent btn-sm" onclick="event.stopPropagation();document.querySelector('.line-menu-btn')?.click();">LINE 洽詢報價</button>
+      </div>`;
       return;
     }
     document.getElementById('quoteDate').textContent = todayTW();   // 改顯示今天日期（試算表 A1 的日期不再顯示）
