@@ -8,7 +8,7 @@
        ※ 網址若改成自有網域或改帳號名稱：把這個檔案裡所有 https://hochukingshopping.github.io/hg/ 換成新網址（含家電區圖片連結）
        ══════════════════════════════════════════════════════════════ -->
   <title>禾鉅事業｜台中手機報價・遠傳中華門號・中古機・家電</title>
-  <meta name="description" content="禾鉅事業位於台中西屯，體系 16 家電信門市，提供遠傳、中華電信門號公版，iPhone、三星等新機現金報價，以及中古機與家電報價，LINE 洽詢台中各區內勤業務。">
+  <meta name="description" content="禾鉅事業位於台中•盤商 •體系18家電信門市，提供遠傳、中華電信門號公版，iPhone、三星等新機現金報價，以及中古機與家電報價，LINE 洽詢台中各區內勤業務。">
   <link rel="canonical" href="https://hochukingshopping.github.io/hg/main.html">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#161618">
@@ -43,7 +43,7 @@
         "url": "https://hochukingshopping.github.io/hg/main.html",
         "logo": "https://hochukingshopping.github.io/hg/img/hg.png",
         "image": "https://hochukingshopping.github.io/hg/img/og-cover.jpg",
-        "description": "台中電信經銷，體系 18 家電信門市，提供遠傳、中華電信門號，新機、中古機與家電報價。",
+        "description": "台中•盤商 •體系18家電信門市，提供遠傳、中華電信門號，新機、中古機與家電報價。",
         "telephone": "+886-985-333-888",
         "address": {
           "@type": "PostalAddress",
@@ -108,6 +108,10 @@
       };
     })();
   </script>
+  <!-- 網站圖示：Google 搜尋結果用 48 的倍數（48/96/192），瀏覽器分頁用 16/32 -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./img/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./img/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="./img/favicon-48.png">
   <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./img/favicon-180.png">
@@ -387,6 +391,43 @@
       margin: 0 0 32px;
     }
     .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+    /* 當日出貨截止時間（首頁左下） */
+    .ship-cutoff {
+      margin-top: 28px; max-width: 400px;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 16px;
+      background: rgba(255,255,255,.04); overflow: hidden;
+    }
+    .ship-cutoff-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; font-size: 13px; font-weight: 700; color: var(--accent);
+      border-bottom: 1px solid rgba(255,255,255,.08); letter-spacing: .04em;
+    }
+    .ship-cutoff-head span { color: var(--on-night-2); font-weight: 500; margin-left: auto; letter-spacing: 0; }
+    .ship-cutoff ul { list-style: none; margin: 0; padding: 4px 18px; }
+    /* 營業時間：膠囊資訊列 */
+    .biz-hours {
+      margin-top: 28px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+      font-size: 15px; color: var(--on-night-2);   /* 與出貨表的地區文字同大小 */
+    }
+    .biz-hours-label { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--on-night); margin-right: 4px; }
+    .biz-hours-label i { color: var(--accent); }
+    .biz-hours-item {
+      padding: 6px 14px; border-radius: var(--r-pill);
+      background: rgba(255,255,255,.08);
+    }
+    .biz-hours-item b { color: var(--on-night); font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; margin-left: 4px; }   /* 與出貨時間同大小、同粗細 */
+    .biz-hours + .ship-cutoff { margin-top: 14px; }
+    .biz-hours-item { white-space: nowrap; }
+    .biz-hours-label { flex-basis: 100%; }   /* 標題自成一行，兩個時段在下一行並排（窄螢幕自動上下排） */
+    .ship-cutoff li {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+      padding: 9px 0; font-size: 15px; color: var(--on-night);
+    }
+    .ship-cutoff li + li { border-top: 1px solid rgba(255,255,255,.06); }
+    .ship-cutoff time { font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--on-night); white-space: nowrap; }
+    .ship-cutoff time small { font-size: 12px; font-weight: 500; color: var(--on-night-2); margin-left: 4px; }
+    @media (max-width: 767px) { .ship-cutoff { max-width: none; } }
     /* 3D 模型下方：拖曳提示 + 商標聲明 */
     .hero-under {
       position: absolute; z-index: 3;
@@ -433,7 +474,9 @@
     /* 直式標語：18 現正熱賣中 */
     .hero-vtag {
       position: absolute; z-index: 2;
-      left: 47%; top: 50%; transform: translate(-50%, -50%);
+      /* 至少在左側文字區（最寬 520px）右邊再空約 50px（88px 含直排字一半寬），才不會壓到促銷項目；畫面夠寬時維持在 47% */
+      left: max(47%, calc(max((100vw - 1200px) / 2, 0px) + 24px + 520px + 88px));
+      top: 50%; transform: translate(-50%, -50%);
       writing-mode: vertical-rl;
       font-size: clamp(1.6rem, 2.6vw, 2.4rem);
       font-weight: 900; letter-spacing: .32em;
@@ -449,7 +492,8 @@
       font-size: 1.5em; letter-spacing: 0;
       margin-bottom: .35em;
     }
-    @media (max-width: 1100px) { .hero-vtag { left: 45%; } }
+    /* 901～1199px：左側文字區與手機之間放不下直排字，避免壓到手機或促銷，先隱藏（≤900 是手機版排版，另有位置） */
+    @media (min-width: 901px) and (max-width: 1199px) { .hero-vtag { display: none; } }
 
     @media (max-width: 900px) {
       /* 手機版：上方固定高度 3D 展示區，下方接文字，不互相覆蓋 */
@@ -664,7 +708,7 @@
     .qt td.model { font-weight: 700; color: var(--ink); padding-right: 12px; width: 44%; }
     .qt td.cap { color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 12px; }
     .qt td.price { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
-    .qt td.price.ask { font-weight: 500; color: var(--ink-3); font-size: 13px; }
+    .qt td.price.ask { color: var(--ink-3); }   /* 「來電洽詢」：原本的灰色，粗細與大小同價錢欄（800、預設字級） */
     .qt .promo {
       display: inline-block; margin-top: 4px;
       font-size: 12px; font-weight: 700; color: #c2410c;
@@ -932,7 +976,7 @@
     </a>
     <nav class="tabs" aria-label="主要分類">
       <a class="tab" href="#sim" data-tab="sim">門號</a>
-      <a class="tab" href="#phone" data-tab="phone">手機</a>
+      <a class="tab" href="#phone" data-tab="phone">手機/穿戴</a>
       <a class="tab" href="#used" data-tab="used">中古機</a>
       <a class="tab" href="#home" data-tab="home">家電</a>
     </nav>
@@ -966,8 +1010,22 @@
            
         </dl>
         <div class="hero-ctas">
-          <a class="btn btn-accent" href="#phone">新機報價單</a>
-          <a class="btn btn-accent" href="#sim">門號公表</a>
+         
+        </div>
+        <!-- 營業時間：一條橫向資訊列（與下方出貨卡片刻意用不同形式，避免混在一起） -->
+        <div class="biz-hours" aria-label="營業時間">
+          <span class="biz-hours-label"><i class="ph-bold ph-clock"></i>營業時間</span>
+          <span class="biz-hours-item">週一～週六 <b>12:00–20:00</b></span>
+          <span class="biz-hours-item">週日 <b>13:00–17:00</b></span>
+        </div>
+        <!-- 當日出貨截止時間：改時間或地區直接改下面的 <li> -->
+        <div class="ship-cutoff" aria-label="當日出貨截止時間">
+          <div class="ship-cutoff-head"><i class="ph-bold ph-truck"></i>當日出貨<span>截止前下單，當天安排出貨</span></div>
+          <ul>
+            <li>大台中區<time>18:30<small>前</small></time></li>
+            <li>彰化市、南投縣市<time>16:00<small>前</small></time></li>
+            <li>其他縣市<time>15:30<small>前</small></time></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -985,8 +1043,8 @@
       <div class="sec-head reveal">
         
         <h2>遠傳、中華電信<br></h2>
-        <!-- 更新日期讀 Google 試算表（SHEET_URLS.simDate）；讀不到時顯示這裡寫的日期 -->
-        <p>最新更新日期 <span id="simDate">2026/10/1</span></p>
+        <!-- 更新日期讀 Google 試算表（SHEET_URLS.simDate）；讀不到時顯示上次讀到的日期，沒有紀錄則顯示「—」 -->
+        <p>最新更新日期 <span id="simDate">讀取中…</span></p>
       </div>
 
       <div class="carrier reveal">
@@ -1005,7 +1063,7 @@
 
       <div class="steps reveal">
         <div class="step"><i class="ph ph-identification-card"></i><b>促案選擇更新</b><span>請洽內勤業務</span></div>
-        <div class="step"><i class="ph ph-list-checks"></i><b>禾鉅系統網址</b><div><a class="btn btn-accent" href="http://shoppingking.com.tw/Telecom/Account/Login?ReturnUrl=%2FTelecom%2F">點我去禾鉅系統</a></div>
+        <div class="step"><i class="ph ph-list-checks"></i><b>禾鉅系統網址</b><div><a class="btn btn-accent" href="http://shoppingking.com.tw/Telecom/Account/Login?ReturnUrl=%2FTelecom%2F" target="_blank" rel="noopener noreferrer">點我去禾鉅系統</a></div>
 </div>
         <div class="step"><i class="ph ph-storefront"></i><b>中華紙本件</b><span>續約作業僅周一至周五，假日無續約作業。<br>周一至周六當天下午4點前通知派車收件<br>黑貓會於當日過去收件。</span></div>
     </div>
@@ -1067,7 +1125,7 @@
     <div class="wrap">
       <div class="reveal">
         <h2>中古機</h2>
-<p class="used-lead">來源皆為自有遠傳與台灣大哥大加盟門市</p>
+  <p class="used-lead">Line聯繫內勤業務查看中古機機況</p>
 <div class="used-points reveal">
 
         <div><i class="ph ph-seal-check"></i><b>貨源乾淨</b><span>來源可追溯，不收來路不明的機器。</span></div>
@@ -1137,7 +1195,7 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" aria-expanded="false">手機怎麼交易<i class="ph ph-plus"></i></button>
-          <div class="faq-a"><div>台中區域手機現場收現或現場匯款，外縣市先匯款後出機。</div></div>
+          <div class="faq-a"><div>1.台中區域手機現場收現或現場匯款，外縣市先匯款後出機。<br>2.門號產出的佣金，抵銷等值貨款。</br></div></div>
         </div>
       </div>
     </div>
@@ -1179,12 +1237,13 @@
      url 留空時，點擊會先改撥 CONTACT_URL 的電話，選單上會標示「待設定」
      ══════════════════════════════════════════════════════════════ */
   const LINE_REGIONS = [
-    { name: '台中A區', area: '沙鹿、龍井、大肚、大甲、清水、后里、豐原、潭子、東勢＋苗栗', url: 'https://line.me/ti/p/hnH9mFFSRP' },
-    { name: '台中B區', area: '西區、南屯、南區、烏日＋雲林',                           url: 'https://line.me/ti/p/3IEoum6d3Y' },
-    { name: '台中C區', area: '西屯、中區、東區、大里、霧峰＋南投',                     url: 'https://line.me/ti/p/d5ruVMnIBV' },
-    { name: '台中D區', area: '北區、北屯、太平',                                     url: 'https://line.me/ti/p/JHgy0HAnAZ' },
+    { name: 'A區', area: '苗栗縣市<br>台中(沙鹿、龍井、大肚、大甲、清水、后里、豐原、潭子、東勢)', url: 'https://line.me/ti/p/hnH9mFFSRP' },
+    { name: 'B區', area: '雲林縣<br>台中(西區、南屯、南區、烏日)',                           url: 'https://line.me/ti/p/3IEoum6d3Y' },
+    { name: 'C區', area: '南投縣市<br>台中(西屯、中區、東區、大里、霧峰)',                     url: 'https://line.me/ti/p/d5ruVMnIBV' },
+    { name: 'D區', area: '台中(北區、北屯、太平)',                                     url: 'https://line.me/ti/p/JHgy0HAnAZ' },
     { name: '嘉義以南', area: '',                                                 url: 'https://line.me/ti/p/oZzmxzYhx5' },
-    { name: '新竹以北', area: '',                                                 url: 'https://line.me/ti/p/24SLNiRBeL' }
+    { name: '新竹以北', area: '',                                                 url: 'https://line.me/ti/p/24SLNiRBeL' },
+    { name: '彰化縣市', area: '',                                                 url: 'https://line.me/ti/p/Gt8BTufsl5' }
   ];
   (function initLineMenu() {
     const wrap = document.getElementById('lineMenu');
@@ -1199,7 +1258,7 @@
       const ext = /^https?:/.test(href);
       return `<a class="line-item${r.url ? '' : ' is-pending'}" role="menuitem" href="${e(href)}"${ext ? ' target="_blank" rel="noopener"' : ''}>
         <span class="line-item-icon"><i class="ph-bold ph-chat-circle-dots"></i></span>
-        <span><b>${e(r.name)}</b>${r.area || !r.url ? `<small>${e(r.area)}</small>` : ''}</span>
+        <span><b>${e(r.name)}</b>${r.area || !r.url ? `<small>${e(r.area).replace(/&lt;br\s*\/?&gt;/gi, '<br>')}</small>` : ''}</span>
         <i class="ph-bold ph-arrow-up-right go"></i>
       </a>`;
     }).join(''); }
@@ -1424,6 +1483,9 @@
     return rows;
   }
   const escHTML = t => String(t).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  /* 今天日期（台灣時區），格式 2026/10/05；手機報價、中古機的「更新日期」顯示今天（門號公版改回讀試算表） */
+  const todayTW = () => new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' })
+    .format(new Date()).replace(/-/g, '/');
 
   /* ── 新機現金報價單 ──
      左半部 A~E 欄、右半部 G~J 欄各自是一份清單，桌機版照試算表左右兩欄排版 */
@@ -1482,7 +1544,7 @@
       root.querySelector('.quote-body').innerHTML = '<div class="quote-error">報價資料格式無法辨識：請確認試算表欄位順序與原本相同（A~E 左半、G~J 右半）。</div>';
       return;
     }
-    document.getElementById('quoteDate').textContent = date || '未標示';
+    document.getElementById('quoteDate').textContent = todayTW();   // 改顯示今天日期（試算表 A1 的日期不再顯示）
     document.getElementById('quoteSource').textContent = source;
     document.getElementById('quoteCount').textContent = total;
 
@@ -1584,18 +1646,29 @@
   })();
 
   /* 門號公版更新日期：取試算表裡第一個「不是表頭」的非空儲存格（優先找日期格式） */
+  /* 門號公版（佣金圖）更新日期：讀 SHEET_URLS.simDate 試算表，隨雲端更動
+     取第一個「不是表頭」的非空儲存格（優先找日期格式） */
   (async function initSimDate() {
     const el = document.getElementById('simDate');
-    if (!el || !SHEET_URLS.simDate) return;
-    const rows = await fetchSheet(SHEET_URLS.simDate);
-    if (!rows) return;
-    const cells = rows.flat().map(v => (v || '').trim()).filter(v => v && !/更新日期|日期/.test(v));
-    const val = cells.find(v => /\d{2,4}[\/\-.年]\d{1,2}/.test(v)) || cells[0];
-    if (val) el.textContent = val;
+    if (!el) return;
+    /* 先顯示上次讀到的日期（存在瀏覽器裡），避免先閃舊日期再跳新日期；沒有紀錄就顯示「讀取中…」 */
+    const KEY = 'hg_simDate';
+    let cached = null;
+    try { cached = localStorage.getItem(KEY); } catch (e) {}
+    if (cached) el.textContent = cached;
+    const rows = SHEET_URLS.simDate ? await fetchSheet(SHEET_URLS.simDate) : null;
+    let val = '';
+    if (rows) {
+      const cells = rows.flat().map(v => (v || '').trim()).filter(v => v && !/更新日期|日期/.test(v));
+      val = cells.find(v => /\d{2,4}[\/\-.年]\d{1,2}/.test(v)) || cells[0] || '';
+    }
+    if (val) { el.textContent = val; try { localStorage.setItem(KEY, val); } catch (e) {} }
+    else if (!cached) el.textContent = '—';   // 讀不到又沒紀錄：顯示「—」，不顯示可能過期的日期
   })();
 
   /* 先讀雲端；失敗時用頁面內嵌的備份資料（Tab 分隔） */
   (async function initQuote() {
+    const qd = document.getElementById('quoteDate'); if (qd) qd.textContent = todayTW();   // 不論雲端是否讀到，都先顯示今天日期
     const cloud = await fetchSheet(SHEET_URLS.newPhone);
     if (cloud && cloud.length > 3) {
       renderQuote(cloud, '雲端即時資料');
@@ -1646,7 +1719,7 @@
     const LIMIT = opt.limit || 15;   // 預設顯示筆數，其餘按「顯示全部」展開
     box.innerHTML = `
       <div class="us-head">
-        <div class="us-meta">${date ? `更新日期 <b>${escHTML(date)}</b>` : '雲端即時資料'}<span>共 <b>${body.length}</b> 筆</span></div>
+        <div class="us-meta">${(opt.today || date) ? `更新日期 <b>${escHTML(opt.today ? todayTW() : date)}</b>` : '雲端即時資料'}<span>共 <b>${body.length}</b> 筆</span></div>
         <input class="us-search" type="search" placeholder="${opt.placeholder}" aria-label="${opt.placeholder}">
       </div>
       <div class="us-scroll">
@@ -1685,7 +1758,7 @@
 
   /* 依 SHEET_URLS 載入各區表格；網址留空的區塊不會顯示 */
   [
-    { id: 'usedSheet', url: SHEET_URLS.usedPhone, placeholder: '搜尋機型、容量',
+    { id: 'usedSheet', url: SHEET_URLS.usedPhone, placeholder: '搜尋機型、容量', today: true,   // today：更新日期顯示今天
       failText: '中古機清單暫時無法載入，請來電或 LINE 詢問現有機型。', emptyText: '目前沒有中古機資料。' },
     { id: 'homeSheet', url: SHEET_URLS.appliance, placeholder: '搜尋家電品牌、型號',
       failText: '家電報價暫時無法載入，請來電或 LINE 詢問。', emptyText: '目前沒有家電報價資料。' }
@@ -2128,6 +2201,25 @@ function kick() { start(); }
 function stop() { running = false; }
 new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(hero);
 document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+</script>
+<!-- ══ 頁面放太久自動重新整理：避免雲端報價更新了，畫面還是舊的 ══
+     條件（任一成立）：開啟超過 12 小時，或已經跨日（過了午夜，日期會不對）
+     時機：使用者切回這個分頁時立刻重整；分頁一直開著時，每分鐘檢查一次，
+           且使用者 5 分鐘內沒有任何操作才重整（避免正在搜尋或填資料時被打斷） -->
+<script>
+(() => {
+  const MAX_AGE = 12 * 60 * 60 * 1000, IDLE = 5 * 60 * 1000;
+  const loadedAt = Date.now();
+  const day = () => new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', dateStyle: 'short' }).format(new Date());
+  const loadedDay = day();
+  let lastAct = Date.now();
+  ['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'].forEach(ev => addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true }));
+  const stale = () => Date.now() - loadedAt > MAX_AGE || day() !== loadedDay;
+  const reload = () => location.reload();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && stale()) reload(); });
+  addEventListener('pageshow', e => { if (e.persisted && stale()) reload(); });   // 從上一頁快取回來時
+  setInterval(() => { if (stale() && Date.now() - lastAct > IDLE) reload(); }, 60 * 1000);
+})();
 </script>
 </body>
 </html>
